@@ -1,9 +1,15 @@
 # coding: utf-8
 import os
 import json
+import platform
 
-APP_DIR = os.path.join(os.getenv('LOCALAPPDATA'), 'Programs', 'antigravity')
-RESOURCES_DIR = os.path.join(APP_DIR, "resources")
+if platform.system() == 'Darwin':
+    APP_DIR = '/Applications/Antigravity.app'
+    RESOURCES_DIR = os.path.join(APP_DIR, 'Contents', 'Resources')
+else:
+    APP_DIR = os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Programs', 'antigravity')
+    RESOURCES_DIR = os.path.join(APP_DIR, "resources")
+
 ASAR_PATH = os.path.join(RESOURCES_DIR, "app.asar")
 UNPACKED_APP_DIR = os.path.join(RESOURCES_DIR, "app")
 
@@ -476,7 +482,10 @@ def apply_patch():
     print("          Antigravity v2.5.0 桌面端 一键汉化补丁")
     print("=======================================================")
     print("\n[执行] 正在为您关闭 Antigravity 程序...")
-    os.system("taskkill /F /IM Antigravity.exe >nul 2>&1")
+    if platform.system() == 'Darwin':
+        os.system("pkill -9 -f Antigravity >/dev/null 2>&1")
+    else:
+        os.system("taskkill /F /IM Antigravity.exe >nul 2>&1")
 
     # 1. 确保 unpacked app 文件夹存在
     if not os.path.exists(UNPACKED_APP_DIR):
@@ -550,9 +559,12 @@ def apply_patch():
     print("\n=======================================================")
     print("  汉化补丁注入成功！正在为您自动启动 Antigravity v2.5.0...")
     print("=======================================================")
-    exe_path = os.path.join(APP_DIR, "Antigravity.exe")
-    if os.path.exists(exe_path):
-        os.startfile(exe_path)
+    if platform.system() == 'Darwin':
+        os.system(f"open '{APP_DIR}'")
+    else:
+        exe_path = os.path.join(APP_DIR, "Antigravity.exe")
+        if os.path.exists(exe_path):
+            os.startfile(exe_path)
     return True
 
 def append_once(file_path, content, marker, name):
