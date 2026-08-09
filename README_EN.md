@@ -8,7 +8,7 @@ An open-source Chinese localization patch for Google Antigravity Desktop
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://www.microsoft.com/windows)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-lightgrey.svg)](https://www.microsoft.com/windows)
 
 </div>
 
@@ -26,13 +26,13 @@ This project uses innovative **Web Injection and Native ASAR Unpacking Technolog
 - 🎯 **Smart Text Matching** - Uses low-level `indexOf` fragmentation reconstruction and CSS pseudo-class polymorphic matching to bypass Webpack code splitting issues
 - ⚡ **One-Click Deployment** - Automatically handles process cleanup and software restart for a seamless "press Enter → enjoy Chinese" experience
 - 🛡️ **Clean & Reversible** - Complete removal of localization with restore script, ensuring "lossless rollback" to official English version at any time
-- 🧭 **Dynamic Path Resolution** - Uses `LOCALAPPDATA` dynamic addressing for universal Windows compatibility regardless of installation location
+- 🧭 **Cross-Platform Compatibility** - Supports native path resolution for both Windows (`LOCALAPPDATA`) and macOS (`/Applications`).
 
 ## 📦 Download & Installation
 
 ### Option 1: Python Script Version 
 
-**Download:** [Antigravity-zh-CN-v2.5.0-Windows-x64.zip](https://github.com/MIMICTE/Antigravity-zh-CN/releases/latest)
+**Download:** [Antigravity-zh-CN-v2.5.0-Windows-x64.zip](https://github.com/MIMICTE/Antigravity-zh-CN/releases/latest) (Note: The .exe is Windows only; macOS users should use the source code/script)
 
 **Features:**
 - ✅ Open source and transparent, auditable code
@@ -59,8 +59,8 @@ The script will automatically:
 > - Right-click → "Open with" → "Python"
 > - Or open command line in the project directory and run:
 >   ```bash
->   python Antigravity-Patcher.py  # Apply patch
->   python Restore.py              # Restore
+>   python3 Antigravity-Patcher.py  # Apply patch (macOS / Linux users should use python3)
+>   python3 Restore.py              # Restore English
 >   ```
 
 ---
@@ -71,7 +71,7 @@ The script will automatically:
 ```bash
 git clone https://github.com/MIMICTE/Antigravity-zh-CN.git
 cd Antigravity-zh-CN
-python Antigravity-Patcher.py
+python3 Antigravity-Patcher.py
 ```
 
 **Or download source code archive:**
@@ -94,7 +94,7 @@ Pure Python implementation of ASAR file format parser with zero external depende
 ## ⚠️ Known Limitations
 
 - **Thought Process in English** - Due to AI model's streaming output architecture, the agent's backend thinking logs (`Thought` process) cannot be localized, but all final responses and frontend UI elements are 100% localized
-- **Windows Only** - Currently only supports Windows platform; macOS and Linux require separate adaptations
+- **Windows and macOS Only** - Currently optimized for Windows and macOS. Linux support may require manual path adjustments.
 - **Version Specific** - Optimized for Antigravity v2.5.0; other versions may require adjustments
 
 ## 📸 Screenshots
@@ -222,7 +222,7 @@ Then re-run the patch script.
 <details>
 <summary><b>Q: Does it support other operating systems?</b></summary>
 
-A: Currently Windows only. macOS and Linux versions have different paths and mechanisms that require separate adaptation.
+A: Currently, Windows and macOS are supported. Linux versions may require path modifications.
 </details>
 
 More questions? Welcome to ask in [GitHub Issues](../../issues) or [Discussions](../../discussions)!

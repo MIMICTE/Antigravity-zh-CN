@@ -8,7 +8,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://www.microsoft.com/windows)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-lightgrey.svg)](https://www.microsoft.com/windows)
 
 </div>
 
@@ -26,13 +26,13 @@
 - 🎯 **智能文本匹配** - 采用底层 `indexOf` 碎片化重组与 CSS 伪类多态匹配策略，完美绕过 Webpack 代码分割导致的汉化失效问题
 - ⚡ **一键部署** - 执行补丁后自动清理进程并重启软件，实现"敲下回车 → 享受中文"的无缝体验
 - 🛡️ **纯净可逆** - 还原脚本可彻底抹除所有汉化残留，确保随时能"无损回滚"至纯血官方英文版
-- 🧭 **全动态路径寻址** - 采用 `LOCALAPPDATA` 动态寻址，支持任意 Windows 系统配置
+- 🧭 **跨平台适配** - 支持 Windows (`LOCALAPPDATA`) 及 macOS (`/Applications`) 原生路径识别
 
 ## 📦 下载与安装
 
 ### 方式一：Python 脚本版
 
-**下载：** [Antigravity-zh-CN-v2.5.0-Windows-x64.zip](https://github.com/MIMICTE/Antigravity-zh-CN/releases/latest)
+**下载：** [Antigravity-zh-CN-v2.5.0-Windows-x64.zip](https://github.com/MIMICTE/Antigravity-zh-CN/releases/latest) (目前 .exe 版本仅供 Windows，macOS 推荐源码或脚本执行)
 
 **特点：**
 - ✅ 开源透明，可审查代码
@@ -59,8 +59,8 @@
 > - 右键选择 "打开方式" → "Python"
 > - 或在项目目录打开命令行执行：
 >   ```bash
->   python Antigravity-Patcher.py  # 汉化
->   python Restore.py              # 还原
+>   python3 Antigravity-Patcher.py  # 汉化 (macOS / Linux 建议用 python3)
+>   python3 Restore.py              # 还原
 >   ```
 
 ---
@@ -71,7 +71,7 @@
 ```bash
 git clone https://github.com/MIMICTE/Antigravity-zh-CN.git
 cd Antigravity-zh-CN
-python Antigravity-Patcher.py
+python3 Antigravity-Patcher.py
 ```
 
 **或下载源码压缩包：**
@@ -94,7 +94,7 @@ python Antigravity-Patcher.py
 ## ⚠️ 已知限制
 
 - **思考日志为英文** - 受限于大模型的即时流式输出架构，智能体后台生成的思考日志（`Thought` 过程）无法汉化，但所有最终回复与前端界面均已 100% 汉化
-- **仅支持 Windows** - 目前仅适配 Windows 平台，macOS 和 Linux 需要单独适配
+- **仅支持 Windows 和 macOS** - 目前适配了 Windows 与 macOS 平台，Linux 需要单独适配
 - **版本依赖** - 针对 Antigravity v2.5.0 优化，其他版本可能需要调整
 
 ## 📸 效果展示
@@ -222,7 +222,7 @@ A: 编辑 `Antigravity-Patcher.py` 文件中的 `dictionary` 字典，添加键�
 <details>
 <summary><b>Q: 支持其他操作系统吗？</b></summary>
 
-A: 目前仅支持 Windows。macOS 和 Linux 版本的路径和机制不同，需要单独适配。
+A: 目前支持 Windows 和 macOS。Linux 版本的路径和机制可能有所不同，需要进一步适配。
 </details>
 
 更多问题？欢迎在 [GitHub Issues](../../issues) 或 [Discussions](../../discussions) 中提问！

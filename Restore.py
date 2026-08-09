@@ -1,9 +1,15 @@
 # coding: utf-8
 import os
 import shutil
+import platform
 
-APP_DIR = os.path.join(os.getenv('LOCALAPPDATA'), 'Programs', 'antigravity')
-RESOURCES_DIR = os.path.join(APP_DIR, "resources")
+if platform.system() == 'Darwin':
+    APP_DIR = '/Applications/Antigravity.app'
+    RESOURCES_DIR = os.path.join(APP_DIR, 'Contents', 'Resources')
+else:
+    APP_DIR = os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Programs', 'antigravity')
+    RESOURCES_DIR = os.path.join(APP_DIR, "resources")
+
 ASAR_PATH = os.path.join(RESOURCES_DIR, "app.asar")
 DISABLED_PATH = ASAR_PATH + ".disabled"
 
@@ -12,7 +18,10 @@ def restore():
     print("          Antigravity v2.5.0 桌面端 纯净版还原工具")
     print("=======================================================")
     print("\n正在为您关闭 Antigravity 程序...")
-    os.system("taskkill /F /IM Antigravity.exe >nul 2>&1")
+    if platform.system() == 'Darwin':
+        os.system("pkill -9 -f Antigravity >/dev/null 2>&1")
+    else:
+        os.system("taskkill /F /IM Antigravity.exe >nul 2>&1")
 
     if os.path.exists(DISABLED_PATH):
         print(f"\n[执行] 找到已禁用的原始语言包: app.asar.disabled")
@@ -33,9 +42,12 @@ def restore():
             print("\n=======================================================")
             print("  还原成功！正在为您自动启动纯净版 Antigravity v2.5.0...")
             print("=======================================================")
-            exe_path = os.path.join(APP_DIR, "Antigravity.exe")
-            if os.path.exists(exe_path):
-                os.startfile(exe_path)
+            if platform.system() == 'Darwin':
+                os.system(f"open '{APP_DIR}'")
+            else:
+                exe_path = os.path.join(APP_DIR, "Antigravity.exe")
+                if os.path.exists(exe_path):
+                    os.startfile(exe_path)
         except Exception as e:
             print(f"[错误] 恢复文件时出错: {e}")
     else:
