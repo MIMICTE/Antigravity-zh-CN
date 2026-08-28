@@ -27,7 +27,10 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Goals": "目标", "Tasks": "任务", "Artifacts": "工件", "Scratch": "草稿", "Chat": "对话",
     "Active": "进行中", "Inactive": "未激活", "Completed": "已完成", "Failed": "已失败",
     "History": "历史记录", "Settings": "设置", "System": "系统", "Network": "网络",
-    "Model": "模型", "Memory": "记忆", "Tools": "工具", "Agents": "智能体",
+    "Model": "模型", "Select Model": "选择模型", "select model": "选择模型",
+    "Your quota for this model is running low.": "您对此模型的配额即将用尽。",
+    "Your quota for this model is running low": "您对此模型的配额即将用尽",
+    "Memory": "记忆", "Tools": "工具", "Agents": "智能体",
     "Overview": "概览", "Logs": "日志", "Clear": "清除", "Save": "保存",
     "Cancel": "取消", "Submit": "提交", "Run": "运行", "Stop": "停止",
     "Edit": "编辑", "Delete": "删除", "Add": "添加", "Remove": "移除", "Download": "下载",
@@ -42,7 +45,24 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Today": "今天", "Yesterday": "昨天", "This week": "本周", "This month": "本月", "All time": "全部时间",
     "Project": "项目", "project": "项目", "projects": "项目", "Conversation": "对话", "conversation": "对话",
     "Workspace": "工作区", "workspace": "工作区", "Minimize": "最小化", "Maximize": "最大化", "Back": "返回",
-    "Folders": "文件夹", "folders": "文件夹", "including": "包括",
+    "Files Changed": "已修改文件", "No subagents": "无子智能体", "No file changes": "无文件修改",
+    "No artifacts generated": "未生成工件", "Uploads": "上传项", "Background Tasks": "后台任务",
+    "No background tasks": "无后台任务", "Terminals": "终端", "No active terminals": "无活动终端",
+    "See less": "收起", "See Less": "收起", "See more": "查看更多", "See More": "查看更多",
+    "Standalone Terminals": "独立终端",
+    "Uncommitted": "未提交", "Staged index changes and working tree changes": "暂存区更改及工作区更改",
+    "Branch": "分支", "All changes since": "自此之后的所有更改",
+    "Agent Edits": "智能体编辑", "Files modified by the agent in this conversation": "智能体在此对话中修改的文件",
+    "Staged Changes": "暂存的更改", "Changes": "更改", "No changes to review": "没有需要审查的更改",
+    "Open File": "打开文件", "New Terminal": "新建终端", "Add Terminal": "添加终端", "Add terminal": "添加终端",
+    "Copy Content": "复制内容", "Copy content": "复制内容",
+    "Show in File Explorer": "在文件资源管理器中显示", "Show in Finder": "在访达中显示", "Reveal in File Explorer": "在文件资源管理器中显示", "Reveal in Finder": "在访达中显示",
+    "Models within this group:": "此分组内的模型：",
+    "Folders": "文件夹", "folders": "文件夹", "Folder": "文件夹", "folder": "文件夹", "including": "包括",
+    "Add Folder": "添加文件夹", "+ Add Folder": "+ 添加文件夹", "Add folder": "添加文件夹", "+ Add folder": "+ 添加文件夹",
+    "Project Folders": "项目文件夹", "Project folders": "项目文件夹",
+    "Manage project folders, agent settings, and permissions.": "管理项目文件夹、智能体设置和权限。",
+    "Manage project folders, agent settings, and permissions": "管理项目文件夹、智能体设置和权限。",
     "Rename": "重命名", "Mark Unread": "标记为未读", "Mark Read": "标记为已读", "Duplicate": "制作副本",
     "Export": "导出", "Import": "导入", "Pin": "置顶", "Archive": "归档",
     "Create New Project": "创建新项目", "Archive Conversation": "归档对话", "now": "刚刚",
@@ -51,6 +71,12 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Open Antigravity IDE": "打开 Antigravity IDE", "Create Project": "创建项目", 
     "Command Palette": "命令面板", "Zoom In": "放大", "Zoom Out": "缩小", "Reset Zoom": "重置缩放",
     "Delete Conversation": "删除对话", "Are you sure you want to delete this conversation? This action cannot be undone.": "您确定要删除此对话吗？此操作无法撤销。",
+    "Are you sure you want to delete the project": "您确定要删除项目",
+    "Are you sure you want to delete the": "您确定要删除",
+    "Are you sure you want to delete": "您确定要删除",
+    "This will permanently delete": "这将永久删除包含在其中的",
+    "within it.": "", "within it": "",
+    "This action cannot be undone.": "此操作无法撤销。", "This action cannot be undone": "此操作无法撤销",
     "Confirm Undo": "确认撤销", "This undo action will not make any code changes.": "此撤销操作不会对代码做出任何更改。",
     "Confirm Redo": "确认重做", "This redo action will not make any code changes.": "此重做操作不会对代码做出任何更改。",
     "Undo changes up to this point": "撤销更改至此处", "Redo changes up to this point": "重做更改至此处",
@@ -60,6 +86,7 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Confirming this redo action will not make any code changes.": "确认此重做操作不会做出任何代码更改。",
     "Undo changes": "撤销更改", "Redo changes": "重做更改",
     "Record Audio": "录制音频", "Record Audio Ctrl+M": "录制音频 Ctrl+M",
+    "Stop Recording": "停止录制", "Stop Recording Ctrl+M": "停止录制 Ctrl+M",
     "Send message": "发送消息", "Send message Enter": "发送消息 Enter",
     "Getting started with a Project": "开始使用项目",
     "Now that you've created a project, configure your project's agent settings or start a conversation.": "现在您已经创建了一个项目，接下来请配置该项目的智能体设置，或者直接开始对话。",
@@ -70,9 +97,13 @@ DOM_TRANSLATOR_INJECTION = r"""
     "No conversations yet": "暂无对话", "Open IDE": "打开 IDE", "Window": "窗口",
     "Review": "审阅", "Email": "电子邮箱", "Upgrade": "升级", "Not in Project": "未分组项目",
     "Ask anything, @ to mention, / for actions": "输入任何问题，使用 @ 提及，使用 / 执行操作",
-    "Status": "状态", "Sort Conversations": "对话排序", "Worktree": "工作区树",
-    "New Project": "新建项目", "Quick Start": "快速开始",
+    "Status": "状态", "Sort Conversations": "对话排序", "Worktree": "工作区树", "Worktrees": "工作区树", "worktree": "工作区树",
+    "New Worktree": "新建工作区树", "New worktree": "新建工作区树",
+    "Local": "本地", "local": "本地", "Remote": "远程", "remote": "远程",
+    "New Project": "新建项目", "No Project": "无项目", "Quick Start": "快速开始",
     "Good response": "好的回答", "Bad response": "差的回答",
+    "Media": "媒体", "Mentions": "提及", "Actions": "操作",
+    "Browser": "浏览器",
 
     // General Settings Page
     "General": "常规", "Appearance": "外观", "Theme": "主题", "Light": "浅色", "Dark": "深色",
@@ -93,6 +124,7 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Your Plan: Google AI Pro": "当前计划：Google AI Pro", "Your Plan:": "当前计划：",
     "You can upgrade to a Google AI Ultra plan to receive higher rate limits.": "您可以升级至 Google AI Ultra 套餐以获得更高的使用限额。",
     "By using this app, you agree to its ": "使用本应用即表示您同意其 ",
+    "By using this app, you agree to its": "使用本应用即表示您同意其",
     "Terms of Service": "服务条款",
     "Configure agent execution, queued message delivery, and permissions.": "配置智能体执行、排队消息发送以及权限。",
     "Execution": "执行", "Agent Settings": "智能体设置", "Agent Behavior": "智能体行为",
@@ -106,22 +138,27 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Specifies Agent's behavior when asking for review on artifacts, which are documents it creates to enable a richer conversation experience.": "指定智能体在请求审核工件时的行为，工件是其为提供更丰富对话体验而创建的文档。",
     "File Access Rules": "文件访问规则", "Configure allowed and denied paths for file reads and writes.": "配置允许和拒绝的文件读取和写入路径。",
     "Network Access Rules": "网络访问规则", "Configure allowed and denied URLs for reading.": "配置允许和拒绝读取的 URL。",
-    "File Reads": "文件读取", "Allow/deny agent read access to specific files or directories.": "允许/拒绝智能体对特定文件或目录的读取权限。",
-    "File Writes": "文件写入", "Allow/deny agent write access to specific files or directories.": "允许/拒绝智能体对特定文件或目录的写入权限。",
-    "Network Reads": "网络读取", "Allow/deny agent read access to specific URLs.": "允许/拒绝智能体对特定 URL 的读取权限。",
-    "Read URLs": "URL 读取", "Allow/deny agent read access to specific URLs or domains.": "允许/拒绝智能体对特定 URL 或域名的读取权限。",
-    "Allow/deny specific terminal commands.": "允许/拒绝特定的终端命令。", "e.g., npm test": "例如：npm test",
-    "External tools the agent can call via Model Context Protocol.": "智能体可通过模型上下文协议 (MCP) 调用的外部工具。", "Enter tool name or server...": "输入工具名称或服务器...",
-    "Allow/deny agent command execution outside the sandbox.": "允许/拒绝智能体在沙盒外部执行命令。", "e.g., curl": "例如：curl",
-    "Allow": "允许", "Deny": "拒绝", "There are no customizations enabled.": "当前未启用任何自定义项。",
+    "Configure allowed and denied URLs for reading": "配置允许和拒绝读取的 URL",
+    "File Reads": "文件读取", "File Writes": "文件写入", "Read URLs": "读取 URL", "Network Reads": "网络读取",
+    "Inherits your General settings when working in this project.": "在此项目中工作时继承您的常规设置。",
+    "Inherits your General settings when working in this project": "在此项目中工作时继承您的常规设置",
+    "Allow/deny agent read access to specific files or directories.": "允许/拒绝智能体读取特定文件或目录。",
+    "Allow/deny agent write access to specific files or directories.": "允许/拒绝智能体写入特定文件或目录。",
+    "Allow/deny agent read access to specific URLs or domains.": "允许/拒绝智能体读取特定 URL 或域名。",
+    "Allow/deny agent read access to specific URLs.": "允许/拒绝智能体读取特定 URL。",
+    "Allow/deny specific terminal commands.": "允许/拒绝特定的终端命令。",
+    "Allow/deny specific commands outside the sandbox.": "允许/拒绝沙盒外的特定命令。",
+    "Allow/deny agent command execution outside the sandbox.": "允许/拒绝智能体在沙盒外执行命令。",
+    "Allow": "允许", "allow": "允许", "Deny": "拒绝", "deny": "拒绝", "Ask": "询问", "ask": "询问", "Allow/deny": "允许/拒绝",
+    "e.g., npm test": "例如：npm test", "Enter tool name or server...": "输入工具名称或服务器...", "e.g., curl": "例如：curl",
+    "There are no customizations enabled.": "当前未启用任何自定义项。",
     "Manage Antigravity app settings.": "管理 Antigravity 应用设置。",
-    "Inherits your General settings when working in this project.": "在此项目中工作时继承您的全局设置。",
     "No MCP servers installed": "未安装任何 MCP 服务器", "Use Add MCP to browse the store, or add a custom server via the MCP config.": "使用“添加 MCP”浏览商店，或通过 MCP 配置添加自定义服务器。",
-    "Plugins": "插件", "Browse and enable plugins from the Build With Google catalog.": "浏览并启用“使用 Google 构建”目录中的插件。",
+    "Plugins": "插件", "Browse and enable plugins from the Build With Google catalog.": "浏览并启用来自 Build With Google 目录的插件。",
     "Cloud CLI MCP Server provides tools to run gcloud and bq CLIcommands in a remote sandbox environment": "Cloud CLI MCP 服务器提供了在远程沙盒环境中运行 gcloud 和 bq CLI 命令的工具。",
-    "Browser Actuation Permissions": "浏览器操作权限", "Execute URLs": "URL 执行", "Allow/deny agent browser actuation access to specific URLs.": "允许/拒绝智能体对特定 URL 的浏览器操作权限。",
+    "Browser Actuation Permissions": "浏览器操控权限", "Execute URLs": "执行 URL", "Allow/deny agent browser actuation access to specific URLs.": "允许/拒绝智能体对特定 URL 进行浏览器操控访问。",
     "Media": "媒体", "Mentions": "提及", "Actions": "操作",
-    "Enable Remote Control": "启用远程控制", "Work with local agents from another device.": "在其他设备上与本地智能体协同工作。",
+    "Enable Remote Control": "启用远程控制", "Work with local agents from another device.": "从另一台设备与本地智能体协同工作。",
     "Enter Queues after the turn": "Enter 键：在当前轮次后排队",
     "Alt+Enter Sends immediately": "Alt+Enter 键：立即发送",
     "Alt+Enter On empty prompt, sends next in queue": "Alt+Enter 键：在输入为空时，发送队列中的下一条",
@@ -139,6 +176,10 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Startup": "启动", "Launch at login": "登录时自动启动", "Hardware Acceleration": "硬件加速",
     "Current Version": "当前版本", "Up to date": "已是最新版本", "Downloading": "下载中...",
     "Restart to update": "重启以更新", "Danger Zone": "危险区域", "Clear History": "清除历史记录",
+    "Delete Project": "删除项目", "Delete project": "删除项目",
+    "Permanently delete": "永久删除", "permanently delete": "永久删除",
+    "active conversation": "个进行中的对话", "active conversations": "个进行中的对话",
+    "active conversation.": "个进行中的对话。", "active conversations.": "个进行中的对话。",
     "Delete All": "全部删除", "Reset to Default": "恢复默认设置", "Restore Defaults": "恢复默认设置", "Reset to default": "恢复默认", "Restore defaults": "恢复默认设置",
     "Keybindings": "快捷键绑定", "Command": "命令", "Shortcut": "快捷键", "Action": "操作",
     "Advanced Settings": "高级设置", "Developer Tools": "开发者工具", "Toggle Developer Tools": "切换开发者工具",
@@ -151,11 +192,19 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Terminal & Tooling Permissions": "终端与工具权限",
     "Terminal Commands": "终端命令", "Configure allowed terminal commands.": "配置允许执行的终端命令。",
     "Commands Outside Sandbox": "沙盒外命令", "Configure allowed commands outside the sandbox.": "配置允许在沙盒外执行的命令。",
+    "Allow/deny agent command execution outside the sandbox.": "允许/拒绝智能体在沙盒外执行命令。",
+    "Allow/deny agent command execution outside the sandbox": "允许/拒绝智能体在沙盒外执行命令",
     "MCP Tools": "MCP 工具", "Configure external tools via Model Context Protocol.": "通过模型上下文协议配置外部工具。",
-    "Allow write access to this path?": "允许对此路径写入吗？", "Yes, allow this time": "是，仅允许本次",
-    "Yes, and always allow in this conversation": "是，并在本次对话中始终允许",
-    "Yes, and always allow when not in a project": "是，并在非项目中始终允许",
-    "Yes, and always allow": "是，始终允许", "No (tell the agent what to do instead)": "否 (告诉智能体改做什么)",
+    "External tools the agent can call via Model Context Protocol.": "智能体可通过模型上下文协议调用的外部工具。",
+    "External tools the agent can call via Model Context Protocol": "智能体可通过模型上下文协议调用的外部工具",
+    "Browser Actuation Permissions": "浏览器操控权限",
+    "Execute URLs": "执行 URL",
+    "Allow/deny agent browser actuation access to specific URLs.": "允许/拒绝智能体对特定 URL 进行浏览器操控访问。",
+    "Allow/deny agent browser actuation access to specific URLs": "允许/拒绝智能体对特定 URL 进行浏览器操控访问",
+    "Allow write access to this path?": "允许写入此路径吗？", "Yes, allow this time": "是，仅本次允许",
+    "Yes, and always allow in this conversation": "是，在本次对话中始终允许",
+    "Yes, and always allow when not in a project": "是，在未分组项目中始终允许",
+    "Yes, and always allow": "是，始终允许", "No (tell the agent what to do instead)": "否 (告诉智能体接下来该做什么)",
     "Skip": "跳过", "Submit": "提交",
 
     // Models & Usage Tab
@@ -166,20 +215,33 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Available AI Credits:": "可用 AI 积分：",
     "Gemini Models": "Gemini 模型", "Claude and GPT models": "Claude 和 GPT 模型",
     "Limited time": "限时", "Low": "低", "High": "高", "View Usage": "查看用量",
+    "Model Quota": "模型配额",
+    "Refresh quota and credits data": "刷新配额与积分数据",
+    "Within each group, models share a weekly limit and a 5-hour limit. Quota is consumed proportionally to the cost of the tokens. Thus, limits will last longer with shorter tasks or using more cost-effective models. The 5-hour limit smooths out aggregate demand to fairly distribute global capacity across all users, while your weekly limit is tied directly to your individual tier.": "在每个分组内，各模型共享每周限额和 5 小时限额。配额按 Token 费用比例消耗，因此使用更短的任务或更具成本效益的模型可以让限额持续更久。5 小时限额用于平滑聚合需求，以在所有用户之间公平分配全局容量，而您的每周限额则直接与您的个人套餐级别挂钩。",
 
     // Customizations & Plugins
     "Configure default behaviors, skills, and MCP servers.": "配置默认行为、技能和 MCP 服务器。",
     "Learn more.": "了解更多。", "Learn more": "了解更多",
     "Token Usage": "Token 使用量",
     "The breakdown below shows token usage from customizations like skills, rules, and MCP. If the budget is exceeded, large customizations will be truncated automatically.": "下方的明细展示了来自技能、规则和 MCP 等自定义项的 Token 使用情况。如果超出预算，大型自定义项将被自动截断。",
+    "There are no customizations enabled.": "当前未启用任何自定义项。",
+    "There are no customizations enabled": "当前未启用任何自定义项",
     "Skills": "技能", "Rules": "规则",
     "Installed MCP Servers": "已安装的 MCP 服务器",
     "Add MCP +": "添加 MCP +", "Add MCP": "添加 MCP", "Add MCP Servers": "添加 MCP 服务器",
     "Search MCP servers by name": "按名称搜索 MCP 服务器",
     "Refresh": "刷新", "Open MCP Config": "打开 MCP 配置",
-    "No MCP Servers": "无 MCP 服务器",
+    "No MCP Servers": "无 MCP 服务器", "No MCP servers installed": "未安装任何 MCP 服务器",
+    "No MCP servers installed.": "未安装任何 MCP 服务器。", "No MCP Servers installed": "未安装任何 MCP 服务器",
+    "Use Add MCP to browse the store, or add a custom server via the MCP config.": "使用“添加 MCP”浏览商店，或通过 MCP 配置添加自定义服务器。",
+    "Use Add MCP to browse the store, or add a custom server via the MCP config": "使用“添加 MCP”浏览商店，或通过 MCP 配置添加自定义服务器",
     "You currently don't have any MCP Servers installed. Add an MCP server above or add a custom one via the MCP Config.": "您目前尚未安装任何 MCP 服务器。请在上方添加 MCP 服务器，或通过 MCP 配置添加自定义服务器。",
+    "Plugins": "插件", "plugins": "插件", "Plugin": "插件", "plugin": "插件",
     "Build With Google Plugins": "使用 Google 插件构建", "Build with Antigravity Plugins": "使用 Antigravity 插件构建",
+    "Browse and enable plugins from the Build With Google catalog.": "浏览并启用来自 Build With Google 目录的插件。",
+    "Browse and enable plugins from the Build With Google catalog": "浏览并启用来自 Build With Google 目录的插件",
+    "Browse and enable plugins from the Build with Antigravity catalog.": "浏览并启用来自 Build with Antigravity 目录的插件。",
+    "Browse and enable plugins from the Build with Antigravity catalog": "浏览并启用来自 Build with Antigravity 目录的插件",
     "Customize": "自定义", "Hide breakdown": "隐藏明细",
     "coding agent": "编程智能体",
     "Core tools and knowledge required to develop for Android": "开发 Android 所需的核心工具和知识",
@@ -193,6 +255,9 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Chrome DevTools": "Chrome 开发者工具",
     "Reliable automation, in-depth debugging, and performance analysis in Chrome using Chrome DevTools and Puppeteer": "使用 Chrome DevTools 和 Puppeteer 在 Chrome 中实现可靠的自动化、深度调试和性能分析",
     "Google Kubernetes Engine (Remote)": "Google Kubernetes Engine (远程)",
+    "How to render rich interactive HTML widgets inline in the chat or as standalone artifacts. Use this skill when you want to show the user diagrams, data visualizations, interactive controls, educational walkthroughs, or any rich visual content beyond plain text and markdown.": "在对话中内联呈现丰富的交互式 HTML 小部件或作为独立工件。当您想向用户展示图表、数据可视化、交互式控件、教程指南或任何超出纯文本和 Markdown 的丰富视觉内容时，请使用此技能。",
+    "Automatically migrate legacy workflows (.agents/workflows/ or ~/.gemini/config/workflows/) to skills (.agents/skills/ or ~/.gemini/config/skills/). Scans for existing workflows, creates target skills directories, extracts and structures instruction content into SKILL.md, and optionally removes old workflow files after confirmation.": "自动将旧版工作流（.agents/workflows/ 或 ~/.gemini/config/workflows/）迁移到技能（.agents/skills/ 或 ~/.gemini/config/skills/）。扫描现有工作流，创建目标技能目录，将指令内容提取并结构化到 SKILL.md 中，并在确认后可选删除旧工作流文件。",
+    "Guidelines for interacting with GitHub and request permissions from the user when commands fail due to restrictions in the agent environment.": "与 GitHub 交互的指南，并在命令由于智能体环境中的限制而失败时向用户请求权限。",
 
     // Shortcuts Panel
     "Configure keyboard shortcuts.": "配置键盘快捷键。",
@@ -203,6 +268,7 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Select Previous Conversation": "选择上一个对话", "Select Next Conversation": "选择下一个对话",
     "Previous Pane Tab": "上一个面板标签", "Next Pane Tab": "下一个面板标签",
     "Toggle Model Selector": "切换模型选择器", "Toggle Voice Recording": "切换语音录制",
+    "Toggle Terminal": "切换终端", "Toggle terminal": "切换终端",
     "Find in Pane": "在面板中查找", "Add to Chat/Quote": "添加到对话/引用",
     "LAYOUT CONTROLS": "布局控制", "Layout Controls": "布局控制", "Layout controls": "布局控制",
     "App Shortcuts": "应用快捷键", "Editor Shortcuts": "编辑器快捷键", 
@@ -238,12 +304,21 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Actuation Permissions": "操作权限", "Browser Actuation Rules": "浏览器操作规则",
     "Configure allowed and denied URLs for browser actuation.": "配置允许和拒绝进行浏览器操作的 URL。",
 
-    // App Tab
-    "App Settings": "应用设置", "Manage application settings.": "管理应用设置。",
+    // App & Application Tab
+    "App Settings": "应用设置", "Application Settings": "应用设置", "Manage application settings.": "管理应用设置。",
+    "Manage Antigravity app settings.": "管理 Antigravity 应用设置。", "Manage Antigravity app settings": "管理 Antigravity 应用设置",
     "Prevent Sleep": "阻止睡眠", "Prevent the computer from sleeping while the app is running.": "在应用运行时阻止计算机进入睡眠状态。",
     "Keep In Menu Bar": "保留在系统托盘", 
     "The app will be accessible from the menu bar and will keep running in the background when all windows are closed.": "应用将可以从系统托盘访问，并在所有窗口关闭时继续在后台运行。",
     "Keep the app accessible from the menu bar and running in the background when all windows are closed.": "应用将可以从系统托盘访问，并在所有窗口关闭时继续在后台运行。",
+    "Remote Control": "远程控制", "remote control": "远程控制",
+    "Enable Remote Control": "启用远程控制", "Enable remote control": "启用远程控制",
+    "Work with local agents from another device.": "从另一台设备与本地智能体协同工作。",
+    "Work with local agents from another device": "从另一台设备与本地智能体协同工作",
+    "Automatic Check for Updates": "自动检查更新", "Automatic check for updates": "自动检查更新",
+    "Automatically prompt you to restart the app when a new update is available. When disabled, you can check for updates manually from the app menu.": "当有新版本可用时，自动提示您重启应用。禁用后，您可以从应用菜单手动检查更新。",
+    "Automatically prompt you to restart the app when a new update is available.": "当有新版本可用时，自动提示您重启应用。",
+    "When disabled, you can check for updates manually from the app menu.": "禁用后，您可以从应用菜单手动检查更新。",
     "Notification Settings": "通知设置", "To modify notification settings, open your operating system's system preferences.": "要修改通知设置，请打开操作系统的系统偏好设置。",
     "Open System Preferences": "打开系统偏好设置",
 
@@ -293,7 +368,7 @@ DOM_TRANSLATOR_INJECTION = r"""
     "troubleshooting guide": "排查指南", "troubleshooting_guide": "排查指南",
     "See our": "查看我们的",
     "for more help.": "以获取更多帮助。", "for more help": "以获取更多帮助",
-    "Dismiss": "忽略", "Copy debug info": "复制调试信息",
+    "Dismiss": "忽略", "Copy debug info": "复制调试信息", "Copy path": "复制路径", "Copy Path": "复制路径", "copy path": "复制路径",
 
     // Remote Control Feature & Prompts
     "Try Remote Control": "尝试远程控制",
@@ -314,8 +389,12 @@ DOM_TRANSLATOR_INJECTION = r"""
     "command": "命令", "commands": "命令", "terminal": "终端", "console": "控制台", "output": "输出", "input": "输入",
     "error": "错误", "warning": "警告", "info": "信息", "success": "成功", "failed": "失败", "pending": "等待中", "running": "运行中",
     "yes": "是", "no": "否", "true": "真", "false": "假", "on": "开", "off": "关", "enable": "启用", "disable": "禁用",
-    "global": "全局", "retry": "重试", "regenerate": "重新生成", "dismiss": "忽略",
-    "allow": "允许", "ask": "询问", "deny": "拒绝"
+    "application": "应用", "applications": "应用", "remote": "远程", "control": "控制",
+    "plugin": "插件", "plugins": "插件", "allow": "允许", "deny": "拒绝", "ask": "询问", "inherit": "继承", "inherits": "继承",
+    "read": "读取", "reads": "读取", "write": "写入", "writes": "写入",
+    "local": "本地", "worktree": "工作区树", "worktrees": "工作区树", "path": "路径", "paths": "路径",
+    "uncommitted": "未提交", "branch": "分支", "branches": "分支", "uploads": "上传项",
+    "global": "全局", "retry": "重试", "regenerate": "重新生成", "dismiss": "忽略"
   };
 
   // Structured Prefix & Content Match Rules for Complex / Truncated Text
@@ -397,6 +476,46 @@ DOM_TRANSLATOR_INJECTION = r"""
     ["Access enterprise mobility data using natural language queries", "使用关于设备队列的自然语言查询、策略合规性的自动审计以及设备集成来访问企业移动数据..."],
     ["Search your Google Cloud projects using natural language", "使用自然语言搜索您的 Google Cloud 项目。"],
 
+    ["Manage Antigravity app settings", "管理 Antigravity 应用设置。"],
+    ["Work with local agents from another device", "从另一台设备与本地智能体协同工作。"],
+    ["Automatically prompt you to restart the app when a new update is available", "当有新版本可用时，自动提示您重启应用。禁用后，您可以从应用菜单手动检查更新。"],
+    ["When disabled, you can check for updates manually from the app menu", "禁用后，您可以从应用菜单手动检查更新。"],
+    ["There are no customizations enabled", "当前未启用任何自定义项。"],
+    ["No MCP servers installed", "未安装任何 MCP 服务器"],
+    ["Use Add MCP to browse the store, or add a custom server via the MCP config", "使用“添加 MCP”浏览商店，或通过 MCP 配置添加自定义服务器。"],
+    ["Browse and enable plugins from the Build With Google catalog", "浏览并启用来自 Build With Google 目录的插件。"],
+    ["Browse and enable plugins from the Build with Antigravity catalog", "浏览并启用来自 Build with Antigravity 目录的插件。"],
+    ["Manage project folders, agent settings, and permissions", "管理项目文件夹、智能体设置和权限。"],
+    ["How to render rich interactive HTML widgets", "在对话中内联呈现丰富的交互式 HTML 小部件或作为独立工件。当您想向用户展示图表、数据可视化、交互式控件、教程指南或任何超出纯文本和 Markdown 的丰富视觉内容时，请使用此技能。"],
+    ["Automatically migrate legacy workflows", "自动将旧版工作流（.agents/workflows/ 或 ~/.gemini/config/workflows/）迁移到技能（.agents/skills/ 或 ~/.gemini/config/skills/）。扫描现有工作流，创建目标技能目录并将内容提取到 SKILL.md 中。"],
+    ["Guidelines for interacting with GitHub", "与 GitHub 交互的指南，并在命令由于智能体环境中的限制而失败时向用户请求权限。"],
+
+    // Slash Command descriptions
+    ["Run until the specified goal is completely finished", "持续运行直到指定目标完全完成。"],
+    ["Run an instruction on a recurring schedule or as a one-time timer", "按定期计划或作为一次性计时器运行指令。"],
+    ["Invoke a browser agent for web tasks", "调用浏览器智能体执行网络任务。"],
+    ["Interview me to align on a plan", "通过问答访谈来达成计划共识。"],
+    ["Invoke a team of agents to autonomously tackle large projects", "调用多智能体团队自主处理大型项目。"],
+    ["Reflect on recent successes or corrections to capture reusable skills or rules", "回顾近期的成功经验或纠正内容，以提炼可复用的技能或规则。"],
+    ["Ask a quick question without interrupting the main conversation", "在不打断主对话的情况下快速提问。"],
+
+    ["Are you sure you want to delete the project", "您确定要删除项目 "],
+    ["Are you sure you want to delete the", "您确定要删除 "],
+    ["Are you sure you want to delete", "您确定要删除 "],
+    ["This will permanently delete", "这将永久删除包含在其中的 "],
+    ["Inherits your General settings when working in this project", "在此项目中工作时继承您的常规设置。"],
+    ["Inherits your general settings when working in this project", "在此项目中工作时继承您的常规设置。"],
+    ["Allow/deny agent read access to specific files or directories", "允许/拒绝智能体读取特定文件或目录。"],
+    ["Allow/deny agent write access to specific files or directories", "允许/拒绝智能体写入特定文件或目录。"],
+    ["Allow/deny agent read access to specific URLs or domains", "允许/拒绝智能体读取特定 URL 或域名。"],
+    ["Configure allowed and denied URLs for reading", "配置允许和拒绝读取的 URL。"],
+    ["Allow/deny specific terminal commands", "允许/拒绝特定的终端命令。"],
+    ["Allow/deny specific commands outside the sandbox", "允许/拒绝沙盒外的特定命令。"],
+    ["Allow/deny agent command execution outside the sandbox", "允许/拒绝智能体在沙盒外执行命令。"],
+    ["External tools the agent can call via Model Context Protocol", "智能体可通过模型上下文协议调用的外部工具。"],
+    ["Within each group, models share a weekly limit and a 5-hour limit", "在每个分组内，各模型共享每周限额和 5 小时限额。配额按 Token 费用比例消耗，因此使用更短的任务或更具成本效益的模型可以让限额持续更久。5 小时限额用于平滑聚合需求，以在所有用户之间公平分配全局容量，而您的每周限额则直接与您的个人套餐级别挂钩。"],
+    ["Allow/deny agent browser actuation access to specific URLs", "允许/拒绝智能体对特定 URL 进行浏览器操控访问。"],
+
     // Error and Fallback Links
     ["Kick off work on your computer and continue working", "在电脑上启动工作，并可以通过手机或其他设备继续与智能体协同工作。请在应用设置中开启“远程控制”。"],
     ["Turn on Remote Control in app settings", "请在应用设置中开启“远程控制”。"],
@@ -412,7 +531,8 @@ DOM_TRANSLATOR_INJECTION = r"""
     ["Agent terminated due to error", "智能体因错误而终止"],
     ["You can prompt the model to try again", "您可以提示模型重试，或者如果错误仍然存在，可以开启新的对话。"],
     ["for more help", " 以获取更多帮助。"],
-    ["See our", "查看我们的 "]
+    ["See our", "查看我们的 "],
+    ["By using this app, you agree to its", "使用本应用即表示您同意其"]
   ];
 
   function translateText(text) {
@@ -450,9 +570,23 @@ DOM_TRANSLATOR_INJECTION = r"""
       let timeStr = m[1].replace(/days?/g, "天").replace(/hours?/g, "小时").replace(/minutes?/g, "分钟").replace(/,/g, "");
       return text.replace(trimmed, "您已使用部分每周限额，它将在 " + timeStr + " 后完全重置。");
     }
+    if ((m = trimmed.match(/^You have hit your weekly limit, it refreshes in (.+?)\. If on a supported paid plan, you can use AI credits in the interim or upgrade to a higher tier\.?$/i))) {
+      let timeStr = m[1].replace(/days?/g, "天").replace(/hours?/g, "小时").replace(/minutes?/g, "分钟").replace(/,/g, "");
+      return text.replace(trimmed, "您已达到每周限额，将在 " + timeStr + " 后重置。如果您使用的是受支持的付费套餐，可以在此期间使用 AI 积分或升级到更高级别的套餐。");
+    }
+    if ((m = trimmed.match(/^You have hit your weekly limit, the 5-hour limit does not currently apply\. Your weekly limit will fully refresh in (.+?)\.?$/i))) {
+      let timeStr = m[1].replace(/days?/g, "天").replace(/hours?/g, "小时").replace(/minutes?/g, "分钟").replace(/,/g, "");
+      return text.replace(trimmed, "您已达到每周限额，当前不适用 5 小时限额。您的每周限额将在 " + timeStr + " 后完全重置。");
+    }
     if ((m = trimmed.match(/^You have used some of your 5-hour limit, it will fully refresh in (.*)\.$/))) {
       let timeStr = m[1].replace(/days?/g, "天").replace(/hours?/g, "小时").replace(/minutes?/g, "分钟").replace(/,/g, "");
       return text.replace(trimmed, "您已使用部分五小时限额，它将在 " + timeStr + " 后完全重置。");
+    }
+    if ((m = trimmed.match(/^You need at least (\d+) AI Credits to send messages\. To continue using (.+?) now, purchase more AI Credits\. Your plan's baseline quota will refresh on (.+?)\.?$/i))) {
+      return text.replace(trimmed, "您至少需要 " + m[1] + " 个 AI 积分才能发送消息。若要立即继续使用 " + m[2] + "，请购买更多 AI 积分。您套餐的基础配额将于 " + m[3] + " 重置。");
+    }
+    if ((m = trimmed.match(/^Your plan's baseline quota will refresh on (.+?)\. To continue using this model now, enable AI Credit overages\.?$/i))) {
+      return text.replace(trimmed, "您套餐的基础配额将于 " + m[1] + " 重置。若要立即继续使用此模型，请启用 AI 积分超额使用。");
     }
     if ((m = trimmed.match(/^Available AI Credits: ([\d,]+)$/))) {
       return text.replace(trimmed, "可用 AI 积分: " + m[1]);
@@ -460,11 +594,33 @@ DOM_TRANSLATOR_INJECTION = r"""
     if ((m = trimmed.match(/^Send feedback as (.+)$/))) {
       return text.replace(trimmed, "以 " + m[1] + " 的身份发送反馈");
     }
+    if ((m = trimmed.match(/^Permanently delete (.+) (including|包括) (\d+) active conversations?\.?$/))) {
+      return text.replace(trimmed, "永久删除 " + m[1] + "，包括 " + m[3] + " 个进行中的对话。");
+    }
+    if ((m = trimmed.match(/^(\d+) active conversations?\.?$/))) {
+      return text.replace(trimmed, m[1] + " 个进行中的对话。");
+    }
+    if ((m = trimmed.match(/^(\d+) active conversations?$/))) {
+      return text.replace(trimmed, m[1] + " 个进行中的对话");
+    }
     if ((m = trimmed.match(/^(\+?\d+) more lines$/))) {
       return text.replace(trimmed, "更多 " + m[1] + " 行");
     }
     if ((m = trimmed.match(/^(\d+) files? changed$/))) {
       return text.replace(trimmed, m[1] + " 个文件已修改");
+    }
+    if ((m = trimmed.match(/^See all \((\d+)\)$/i))) {
+      return text.replace(trimmed, "查看全部 (" + m[1] + ")");
+    }
+    if ((m = trimmed.match(/^Media \((.+)\)$/i))) {
+      let t = m[1].replace(/Today/g, "今天").replace(/Yesterday/g, "昨天");
+      return text.replace(trimmed, "媒体 (" + t + ")");
+    }
+    if ((m = trimmed.match(/^All changes since (.+)$/i))) {
+      return text.replace(trimmed, "自 " + m[1] + " 以来的所有更改");
+    }
+    if ((m = trimmed.match(/^Models within this group:\s*(.+)$/i))) {
+      return text.replace(trimmed, "此分组内的模型：" + m[1]);
     }
     if ((m = trimmed.match(/^Last (\d+) days?$/i))) return text.replace(trimmed, "最近 " + m[1] + " 天");
     if ((m = trimmed.match(/^Last (\d+) hours?$/i))) return text.replace(trimmed, "最近 " + m[1] + " 小时");
@@ -495,6 +651,16 @@ DOM_TRANSLATOR_INJECTION = r"""
     }
 
     // Special Multi-segment Matches
+    if (text.indexOf("Are you sure you want to delete") !== -1) {
+      text = text.replace(/Are you sure you want to delete the\s*(project|项目)?\s*/gi, "您确定要删除项目 ");
+      text = text.replace(/Are you sure you want to delete\s*/gi, "您确定要删除 ");
+    }
+    if (text.indexOf("This will permanently delete") !== -1) {
+      text = text.replace(/This will permanently delete\s*/gi, "这将永久删除包含在其中的 ");
+    }
+    if (text.indexOf("within it") !== -1) {
+      text = text.replace(/\s*within it\.?/gi, "");
+    }
     if (text.indexOf("Google Developer Knowledge") !== -1 || text.indexOf("official developer documentation and retrieve") !== -1) {
       return "Google Developer Knowledge MCP 服务器使 AI 驱动的开发工具能够搜索 Google 的官方开发者文档并检索相关内容...";
     }
