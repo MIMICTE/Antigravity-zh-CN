@@ -22,7 +22,7 @@ UNPACKED_APP_DIR = os.path.join(RESOURCES_DIR, "app")
 def restore():
     print("==================================================================")
     print("                                                                ")
-    print("             Antigravity v2.11.0 桌面端 纯净版还原工具              ")
+    print("             Antigravity v2.12.2 桌面端 纯净版还原工具              ")
     print("Github 开源项目地址：https://github.com/MIMICTE/Antigravity-zh-CN")
     print("                                                                ")
     print("==================================================================")
@@ -31,7 +31,7 @@ def restore():
     if sys.platform == "win32":
         os.system("taskkill /F /IM Antigravity.exe >nul 2>&1")
     elif sys.platform == "darwin":
-        os.system("pkill -f Antigravity >/dev/null 2>&1")
+        os.system("pkill -x Antigravity >/dev/null 2>&1")
 
     if os.path.exists(DISABLED_PATH):
         print("[执行] 找到已禁用的原始语言包: app.asar.disabled")
