@@ -22,7 +22,7 @@ UNPACKED_APP_DIR = os.path.join(RESOURCES_DIR, "app")
 def restore():
     print("==================================================================")
     print("                                                                ")
-    print("             Antigravity v2.11.0 桌面端 纯净版还原工具              ")
+    print("             Antigravity v2.21.1 桌面端 纯净版还原工具              ")
     print("Github 开源项目地址：https://github.com/MIMICTE/Antigravity-zh-CN")
     print("                                                                ")
     print("==================================================================")
@@ -89,11 +89,13 @@ def restore():
 if __name__ == "__main__":
     try:
         restore()
+        input("\n执行完毕，按 Enter 键退出...")
     except KeyboardInterrupt:
         print("\n\n[提示] 用户取消操作。")
+        input("\n按 Enter 键退出...")
     except Exception as e:
         print(f"\n[错误] 执行过程中出现异常: {e}")
         print("\n如果问题持续，请访问 GitHub 提交 Issue:")
         print("https://github.com/MIMICTE/Antigravity-zh-CN/issues")
-        input("\n按任意键退出...")
+        input("\n按 Enter 键退出...")
         raise

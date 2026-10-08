@@ -16,9 +16,7 @@ An open-source Chinese localization patch for Google Antigravity Desktop
 
 ## 📖 Project Overview
 
-**Antigravity v2.11.0 Chinese Localization Patch** - Provides complete Chinese interface support for Google Antigravity desktop application.
-
-This project uses innovative **Web Injection and Native ASAR Unpacking Technology** to achieve perfect localization without compromising the original software's security and stability.
+**Antigravity v2.21.1 Chinese Localization Patch** - Provides complete Chinese interface support for Google Antigravity desktop application.
 
 ## ✨ Key Features
 
@@ -39,7 +37,7 @@ This project uses innovative **Web Injection and Native ASAR Unpacking Technolog
 - ✅ Native experience, one-click execution with automatic app restart
 
 **【For Windows Users】**
-1. Download `Windows-x64-exe.zip` and extract
+1. Download `Antigravity-zh-CN-v2.22.1-windows-x64.zip` and extract
 2. Double-click `Antigravity-Patcher.exe` to apply the patch (Use `Restore.exe` to revert)
 
 **【For macOS Users】**
@@ -83,7 +81,7 @@ Pure Python implementation of ASAR file format parser with zero external depende
 
 - **Thought Process in English** - Due to AI model's streaming output architecture, the agent's backend thinking logs (`Thought` process) cannot be localized, but all final responses and frontend UI elements are 100% localized
 - **Platform Support** - Fully supports Windows and macOS (Intel & Apple Silicon). Linux is currently not supported
-- **Version Specific** - Deeply optimized for Antigravity v2.11.0 with robust compatibility across versions
+- **Version Specific** - Deeply optimized for Antigravity v2.21.1 with robust compatibility across versions
 
 ## 📸 Screenshots
 
@@ -174,31 +172,19 @@ A: Python is not added to your system PATH. Reinstall Python and make sure to ch
 </details>
 
 <details>
-<summary><b>Q: Software won't start after applying the patch?</b></summary>
+<summary><b>Q: Why does Antigravity sometimes open without a visible UI? Is the software broken by the script?</b></summary>
 
-A: Try these steps:
-1. Run `Restore.exe` or `Restore.py` to restore original version
-2. Ensure the original Antigravity works properly
-3. Check if antivirus software is blocking the script
-4. Run the script as administrator
+A: Usually, this is not caused by the script, but by Electron's background process mechanics:
+1. The app might have started minimized to the **System Tray**. Check your tray icon (often a black `^` icon) and double-click it to bring up the window.
+2. There might be a "zombie" `Antigravity.exe` background process left in the Task Manager. Press `Ctrl+Shift+Esc` to end all Antigravity processes in the Task Manager and try opening it again.
+3. If it's a completely blank screen, your antivirus might have quarantined essential unpacked code files. Run `Restore.exe` to revert to the official version, temporarily disable the antivirus, and re-run the patcher to revive it.
 </details>
 
 <details>
-<summary><b>Q: Some parts of the UI are still in English?</b></summary>
+<summary><b>Q: Can I still use this localization patch when the official Antigravity app updates?</b></summary>
 
-A: This is normal. Some content cannot be localized because:
-- AI thinking logs (Thought) must remain in English for model stability
-- Dynamically generated content may not be covered by the dictionary
-- Feel free to submit an Issue to report missing translations
-</details>
-
-<details>
-<summary><b>Q: Localization stops working after software update?</b></summary>
-
-A: Antigravity updates may overwrite localization files. Please:
-1. Run `Restore.exe` or `Restore.py` to clean up old version
-2. Wait for this project to update for the new version
-3. Or re-run the patch script on the new version (may be unstable)
+A: **Absolutely!** 
+Starting from v2.21.1, the script features an **OTA Smart Compatibility Mechanism**. When the official app updates, it releases new core files, and the localization will naturally temporarily revert to English. Simply **re-run the patcher**, and it will automatically detect the new version, clear the old unpacked cache, and re-extract and inject the localization into the latest official code. It is fully forward-compatible!
 </details>
 
 <details>

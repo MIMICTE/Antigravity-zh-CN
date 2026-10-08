@@ -3,7 +3,7 @@ import os
 import json
 import struct
 import subprocess
-
+import shutil
 import sys
 
 if sys.platform == "win32":
@@ -24,7 +24,8 @@ DOM_TRANSLATOR_INJECTION = r"""
 (function() {
   const dictionary = {
     // Top Bar & Global Navigation
-    "Goals": "目标", "Tasks": "任务", "Artifacts": "工件", "Scratch": "草稿", "Chat": "对话",
+    "Goals": "目标", "Tasks": "任务", "Artifacts": "产物", "Artifact": "产物", "Scratch": "草稿", "Chat": "对话",
+    "No artifacts generated": "暂无生成的产物", "No artifacts": "暂无产物",
     "Active": "进行中", "Inactive": "未激活", "Completed": "已完成", "Failed": "已失败",
     "History": "历史记录", "Settings": "设置", "System": "系统", "Network": "网络",
     "Model": "模型", "Memory": "记忆", "Tools": "工具", "Agents": "智能体",
@@ -41,13 +42,31 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Last 7 days": "最近 7 天", "Last 24 hours": "最近 24 小时", "Last 30 days": "最近 30 天", "Last 3 months": "最近 3 个月",
     "Today": "今天", "Yesterday": "昨天", "This week": "本周", "This month": "本月", "All time": "全部时间",
     "Project": "项目", "project": "项目", "projects": "项目", "Conversation": "对话", "conversation": "对话",
+    "No Project": "无项目", "No project": "无项目", "no project": "无项目",
+    "No projects found": "暂无项目", "No projects found.": "暂无项目",
+    "No project found": "暂无项目", "No project found.": "暂无项目",
+    "found": "找到", "not found": "未找到", "Not found": "未找到",
+    "Search projects": "搜索项目", "Search projects...": "搜索项目...",
     "Workspace": "工作区", "workspace": "工作区", "Minimize": "最小化", "Maximize": "最大化", "Back": "返回",
     "Folders": "文件夹", "folders": "文件夹", "including": "包括",
     "Rename": "重命名", "Mark Unread": "标记为未读", "Mark Read": "标记为已读", "Duplicate": "制作副本",
     "Export": "导出", "Import": "导入", "Pin": "置顶", "Archive": "归档",
+    "Split": "分屏", "Split Right": "向右分屏", "Split Down": "向下分屏", "Split Left": "向左分屏", "Split Up": "向上分屏",
+    "Replace With New": "替换为新建", "Replace with New": "替换为新建", "Replace with new": "替换为新建",
+    "Copy Link": "复制链接", "Copy link": "复制链接", "Copy ID": "复制 ID", "Copy id": "复制 ID",
+    "Copy Conversation ID": "复制对话 ID", "Copy Conversation Link": "复制对话链接", "Duplicate Conversation": "复制对话",
+    "Close Others": "关闭其他", "Close All": "全部关闭", "Close to the Right": "关闭右侧", "Close Saved": "关闭已保存",
     "Create New Project": "创建新项目", "Archive Conversation": "归档对话", "now": "刚刚",
     "Conversation Name": "对话名称", "Conversation ID": "对话 ID", "Project Name": "项目名称",
-    "Toggle Auxiliary Pane": "切换辅助面板", "User cancelled agent execution.": "用户取消了智能体执行。",
+    "Toggle Auxiliary Pane": "切换辅助面板", "Maximize Pane": "最大化面板", "Minimize Pane": "最小化面板", "Restore Pane": "还原面板",
+    "Files Changed": "已修改文件", "Files changed": "已修改文件", "File Changed": "已修改文件",
+    "Uploads": "已上传文件", "uploads": "已上传文件", "See all": "查看全部", "See All": "查看全部",
+    "Background Tasks": "后台任务", "Background tasks": "后台任务", "Background Task": "后台任务",
+    "Terminals": "终端", "terminals": "终端", "Delete Terminal": "删除终端", "Split Terminal": "拆分终端",
+    "Add Terminal": "添加终端", "Add terminal": "添加终端",
+    "No subagents": "暂无子智能体", "No subagents running": "暂无运行中的子智能体", "No subagent": "暂无子智能体",
+    "Select Model": "选择模型", "Select model": "选择模型", "Select a model": "选择一个模型",
+    "User cancelled agent execution.": "用户取消了智能体执行。",
     "Open Antigravity IDE": "打开 Antigravity IDE", "Create Project": "创建项目", 
     "Command Palette": "命令面板", "Zoom In": "放大", "Zoom Out": "缩小", "Reset Zoom": "重置缩放",
     "Delete Conversation": "删除对话", "Are you sure you want to delete this conversation? This action cannot be undone.": "您确定要删除此对话吗？此操作无法撤销。",
@@ -67,6 +86,8 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Main Agent": "主智能体", "Add Context": "添加上下文",
     "Loading Antigravity": "正在加载 Antigravity", "Loading": "正在加载",
     "+ New Conversation": "+ 新建对话", "New Conversation": "新建对话", "Conversation History": "历史对话", "Scheduled Tasks": "计划任务",
+    "Automations": "自动化", "Automation": "自动化",
+    "Open File": "打开文件", "New Terminal": "新建终端", "just now": "刚刚", "Just now": "刚刚",
     "No conversations yet": "暂无对话", "Open IDE": "打开 IDE", "Window": "窗口",
     "Review": "审阅", "Email": "电子邮箱", "Upgrade": "升级", "Not in Project": "未分组项目",
     "Ask anything, @ to mention, / for actions": "输入任何问题，使用 @ 提及，使用 / 执行操作",
@@ -101,9 +122,27 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Queue": "排队", "Send Immediately": "立即发送", "Keyboard shortcuts": "键盘快捷键",
     "Security Preset": "安全预设", 
     "Choose a predefined security preset for the agent. This controls terminal auto-execution policy, and file access policy.": "为智能体选择一个预定义的安全预设。这将控制终端自动执行策略和文件访问策略。",
+    "Controls the actions the agent can take.": "控制智能体可以执行的操作。",
+    "Controls the actions the agent can take": "控制智能体可以执行的操作",
+    "Global Permissions": "全局权限", "Global permissions": "全局权限",
+    "Tool Permissions": "工具权限", "Tool permissions": "工具权限",
+    "Modify permissions for file, terminal, and MCP tools.": "修改文件、终端和 MCP 工具的权限。",
+    "Modify permissions for file, terminal, and MCP tools": "修改文件、终端和 MCP 工具的权限",
     "Default": "默认", "Always Ask": "总是询问", "Always Proceed": "自动执行",
-    "Artifact Review Policy": "工件审核策略",
-    "Specifies Agent's behavior when asking for review on artifacts, which are documents it creates to enable a richer conversation experience.": "指定智能体在请求审核工件时的行为，工件是其为提供更丰富对话体验而创建的文档。",
+    "Inherit Global": "继承全局", "Inherits Global": "继承全局", "inherit global": "继承全局",
+    "Inherits your Global Permissions when working in this project.": "在此项目中工作时继承您的全局权限。",
+    "Inherits your Global Permissions when working in this project": "在此项目中工作时继承您的全局权限",
+    "Inherits your Global Permissions": "继承您的全局权限",
+    "Plan Review Policy": "计划审阅策略",
+    "Whether the agent asks you to review its documents.": "智能体是否要求您审阅其文档。",
+    "Whether the agent asks you to review its documents": "智能体是否要求您审阅其文档",
+    "Type / and select plan to have the agent generate a plan.": "输入 / 并选择 plan 即可让智能体生成计划。",
+    "Type / and select plan to have the agent generate a plan": "输入 / 并选择 plan 即可让智能体生成计划",
+    "to have the agent generate a plan.": "即可让智能体生成计划。",
+    "to have the agent generate a plan": "即可让智能体生成计划",
+    "and select": "并选择",
+    "Artifact Review Policy": "产物审阅策略",
+    "Specifies Agent's behavior when asking for review on artifacts, which are documents it creates to enable a richer conversation experience.": "指定智能体在请求审阅产物时的行为。产物是指其为提供更丰富对话体验而创建的各类文档与生成物。",
     "File Access Rules": "文件访问规则", "Configure allowed and denied paths for file reads and writes.": "配置允许和拒绝的文件读取和写入路径。",
     "Network Access Rules": "网络访问规则", "Configure allowed and denied URLs for reading.": "配置允许和拒绝读取的 URL。",
     "File Reads": "文件读取", "Allow/deny agent read access to specific files or directories.": "允许/拒绝智能体对特定文件或目录的读取权限。",
@@ -144,6 +183,16 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Advanced Settings": "高级设置", "Developer Tools": "开发者工具", "Toggle Developer Tools": "切换开发者工具",
     "Open Logs": "打开日志", "Proxy Server": "代理服务器", "Enable Proxy": "启用代理",
     "Auto-Updater": "自动更新程序", "Always": "始终", "Never": "从不", "Ask": "询问",
+    "Contrast": "对比度", "contrast": "对比度", "Strong": "强", "strong": "强",
+    "Windows Subsystem for Linux": "适用于 Linux 的 Windows 子系统 (WSL)",
+    "Run the app against a Linux environment. Connecting relaunches the app into the selected WSL distro.": "在 Linux 环境中运行应用。连接后将重启应用并切换至所选的 WSL 分发版。",
+    "Connect": "连接", "connect": "连接",
+    "App version": "应用版本", "App Version": "应用版本",
+    "Automatic Check for Updates": "自动检查更新",
+    "Automatically prompt you to restart the app when a new update is available. When disabled, you can check for updates manually from the app menu.": "当有新更新可用时自动提示您重启应用。禁用后，您可以从应用菜单中手动检查更新。",
+    "Invalid Media": "无效媒体", "invalid media": "无效媒体",
+    "Maximum number of attachments reached": "已达到附件数量上限",
+    "Maximum number of attachments reached.": "已达到附件数量上限。",
     "Save changes": "保存更改", "Apply": "应用", "OK": "确定", "Features": "功能",
     "Experimental Features": "实验性功能", "Enable": "启用", "Disable": "禁用",
     "API Configuration": "API 配置", "Account Settings": "账号设置", "Profile Settings": "个人资料",
@@ -166,22 +215,55 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Available AI Credits:": "可用 AI 积分：",
     "Gemini Models": "Gemini 模型", "Claude and GPT models": "Claude 和 GPT 模型",
     "Limited time": "限时", "Low": "低", "High": "高", "View Usage": "查看用量",
+    "Notice": "提示", "notice": "提示", "Leaving Soon": "即将下线", "Leaving soon": "即将下线",
+    "Start using Gemini 3.8 Flash, our best Flash model.": "开始使用 Gemini 3.8 Flash，我们最强大的 Flash 模型。",
+    "Sonnet 5.5 is now available on paid Pro and Ultra plans. Third-party model access will no longer be available on your current plan starting on November 2, 2026.": "Sonnet 5.5 现已在付费的 Pro 和 Ultra 方案中提供。从 2026 年 11 月 2 日起，您当前的方案将不再支持访问第三方模型。",
 
     // Customizations & Plugins
     "Configure default behaviors, skills, and MCP servers.": "配置默认行为、技能和 MCP 服务器。",
     "Learn more.": "了解更多。", "Learn more": "了解更多",
     "Token Usage": "Token 使用量",
-    "The breakdown below shows token usage from customizations like skills, rules, and MCP. If the budget is exceeded, large customizations will be truncated automatically.": "下方的明细展示了来自技能、规则和 MCP 等自定义项的 Token 使用情况。如果超出预算，大型自定义项将被自动截断。",
+    "The breakdown below shows token usage from customizations like rules, skills, and MCP. If a budget is exceeded, large rules are demoted to path pointers and large customizations are excluded automatically.": "下方的明细展示了来自规则、技能和 MCP 等自定义项的 Token 使用情况。如果超出预算，大型规则将降级为路径指针，大型自定义项将被自动排除。",
+    "The breakdown below shows token usage from customizations like skills, rules, and MCP. If the budget is exceeded, large customizations will be truncated automatically.": "下方的明细展示了来自技能、规则和 MCP 等自定义项的 Token 使用情况。如果超出预算，大型规则将降级为路径指针，大型自定义项将被自动排除。",
     "Skills": "技能", "Rules": "规则",
     "Installed MCP Servers": "已安装的 MCP 服务器",
-    "Add MCP +": "添加 MCP +", "Add MCP": "添加 MCP", "Add MCP Servers": "添加 MCP 服务器",
+    "Add MCP +": "添加 MCP +", "Add MCP": "添加 MCP", "Add MCP Servers": "添加 MCP 服务器", "Add MCP Server": "添加 MCP 服务器",
+    "Copy Config File Path": "复制配置文件路径",
     "Search MCP servers by name": "按名称搜索 MCP 服务器",
-    "Refresh": "刷新", "Open MCP Config": "打开 MCP 配置",
+    "Refresh": "刷新", "Refreshing...": "刷新中...", "Refreshing": "刷新中",
+    "Analyzed": "已分析", "analyzed": "已分析",
+    "Exploring file, editing file": "浏览文件、编辑文件",
+    "Open MCP Config": "打开 MCP 配置",
     "No MCP Servers": "无 MCP 服务器",
     "You currently don't have any MCP Servers installed. Add an MCP server above or add a custom one via the MCP Config.": "您目前尚未安装任何 MCP 服务器。请在上方添加 MCP 服务器，或通过 MCP 配置添加自定义服务器。",
     "Build With Google Plugins": "使用 Google 插件构建", "Build with Antigravity Plugins": "使用 Antigravity 插件构建",
     "Customize": "自定义", "Hide breakdown": "隐藏明细",
     "coding agent": "编程智能体",
+    "Search customizations...": "搜索自定义项...",
+    "Google Workspace": "Google Workspace",
+    "Build with Google": "使用 Google 构建",
+    "Marketplace": "插件市场",
+    "Installed": "已安装",
+    "Find skills, agents, and more in the Marketplace.": "在插件市场中发现技能、智能体及更多内容。",
+    "Browse the Marketplace": "浏览插件市场",
+    "Skills & Rules": "技能与规则",
+    "Built In": "内置",
+    "Custom Agents": "自定义智能体",
+    "No custom agents yet.": "暂无自定义智能体。",
+    "MCP Servers": "MCP 服务器",
+    "No MCP servers yet. Use Add to browse the store.": "暂无 MCP 服务器。请使用“添加”浏览商店。",
+    "Create a Plugin with the Agent": "使用智能体创建插件",
+    "See less": "收起",
+    "Google Docs": "Google 文档",
+    "Google Sheets": "Google 表格",
+    "Google Slides": "Google 幻灯片",
+    "Google Drive": "Google 云端硬盘",
+    "Google Calendar": "Google 日历",
+    "Gemini API": "Gemini API",
+    "Android CLI": "Android CLI",
+    "Data Agent Kit": "Data Agent Kit",
+    "Dart and Flutter": "Dart 和 Flutter",
+    "Google Maps Platform": "Google Maps Platform",
     "Core tools and knowledge required to develop for Android": "开发 Android 所需的核心工具和知识",
     "Modern Web Guidance": "现代 Web 开发指南",
     "Keep your coding agent up to date with the latest web best practices.": "让您的编程智能体掌握最新的 Web 最佳实践。",
@@ -223,6 +305,12 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Show thought process": "显示思考过程", "Hide thought process": "隐藏思考过程",
     "Generating...": "生成中...", "Planning...": "计划中...",
     "Issue Type": "问题类型", "Bug Report": "错误报告", "Feature Request": "功能请求",
+    "Remote Control Issue": "远程控制问题", "Remote control issue": "远程控制问题",
+    "Legal Help": "法律帮助", "legal help": "法律帮助",
+    "Visit Legal Help to ask for content changes for legal reasons.": "访问法律帮助以出于法律原因请求更改内容。",
+    "Visit Legal Help to ask for content changes for legal reasons": "访问法律帮助以出于法律原因请求更改内容",
+    "to ask for content changes for legal reasons.": "以出于法律原因请求更改内容。",
+    "to ask for content changes for legal reasons": "以出于法律原因请求更改内容",
     "General Feedback": "常规反馈", "Describe your issue or idea...": "描述您的问题或想法...",
     "Please provide details...": "请提供详细信息...", "Include diagnostic data": "包含诊断数据",
     "Include app logs": "包含应用日志", "Send Feedback": "发送反馈",
@@ -315,7 +403,7 @@ DOM_TRANSLATOR_INJECTION = r"""
     "error": "错误", "warning": "警告", "info": "信息", "success": "成功", "failed": "失败", "pending": "等待中", "running": "运行中",
     "yes": "是", "no": "否", "true": "真", "false": "假", "on": "开", "off": "关", "enable": "启用", "disable": "禁用",
     "global": "全局", "retry": "重试", "regenerate": "重新生成", "dismiss": "忽略",
-    "allow": "允许", "ask": "询问", "deny": "拒绝"
+    "allow": "允许", "ask": "询问", "deny": "拒绝", "split": "分屏", "notice": "提示"
   };
 
   // Structured Prefix & Content Match Rules for Complex / Truncated Text
@@ -325,14 +413,32 @@ DOM_TRANSLATOR_INJECTION = r"""
     ["Plugins are packaged collections of skills and MCPs", "插件是技能和 MCP 的打包集合，用于帮助 "],
     ["work with Google developer products. You can always change your choices in Settings.", " 中的智能体与 Google 开发者产品协同工作。您可以随时在“设置”中更改您的选择。"],
     ["Provides a comprehensive guide", "提供 Google Antigravity (AGY) 的综合指南、快速参考和站点地图，包括 Antigravity CLI、Antigravity 2.0、IDE、Python SDK、斜杠命令、快捷键和自定义项。"],
-    ["How to render rich interactive HTML widgets inline in the chat or as standalone artifacts. Use this skill", "如何在对话中内联或作为独立工件渲染丰富的交互式 HTML 小部件。当您想要向用户显示图表、数据可视化或交互式控件时，请使用此技能。"],
+    ["How to render rich interactive HTML widgets inline in the chat or as standalone artifacts. Use this skill", "如何在对话中内联或作为独立产物渲染丰富的交互式 HTML 小部件。当您想要向用户显示图表、数据可视化或交互式控件时，请使用此技能。"],
     ["Automatically migrate legacy workflows", "自动将旧版工作流迁移到技能目录。它会扫描现有工作流，并创建目标..."],
     ["Guidelines for interacting with GitHub and request permissions", "关于与 GitHub 交互的指南，并在智能体环境中由于限制导致命令失败时向用户请求相应的权限。"],
     ["Comprehensive guide and reference for the Antigravity Customization System", "Antigravity 自定义系统的综合指南和参考。用于解释自定义项的工作原理、加载优先级、发现机制，并指导创建技能、规则、插件、钩子和 MCP 服务器。"],
     ["Skills providing tailored instructions for happy path", "提供 Dart 和 Flutter 开发主流程定制化指南的技能。"],
+    ["Interactive guide to design and create a scheduled background automation", "设计和创建计划后台自动化的交互式指南。当用户想要创建自动化或周期性计划任务时（例如“总结我的邮件”），请使用此技能。"],
+    ["How to manage and create plugins", "如何管理和创建插件——作为单一单元安装、启用和禁用的命名空间技能、智能体、规则、MCP 服务器和钩子捆绑包。"],
+    ["Build, package, run, and debug UI extensions for Antigravity", "为 Antigravity 构建、打包、运行和调试 UI 扩展：在侧边面板中渲染的交互式 Web 面板，由使用内置 Sidecar SDK 的 Node.js sidecar 提供服务。"],
+    ["Discover UI plugin panels relevant to the current task", "发现与当前任务相关的 UI 插件面板，并在对话中显示一键式快捷胶囊以在侧边面板中打开（切换）它们。"],
     ["Build and prototype location-aware applications with Google Maps Platform", "使用 Google Maps Platform 构建具有位置感知能力的应用并设计原型。"],
     ["Specialized suite of skills for data engineers and database", "专为 Google Cloud 上的数据工程师和数据库从业人员打造的专业技能套件。"],
     ["Build applications with the Gemini Interactions API and Live API", "使用 Gemini Interactions API 和 Live API 构建应用，包括文本生成、多轮对话等功能。"],
+    ["Build on Google's developer platforms, including Android, Chrome, Gemini, and Google Cloud.", "基于 Google 开发者平台（包括 Android、Chrome、Gemini 和 Google Cloud）构建。"],
+    ["Prototype, build & run modern apps that user", "原型设计、构建和运行现代应用程序..."],
+    ["Curated collection of agent skills for science t", "为科学任务精心挑选的智能体技能集合。"],
+    ["Using the Google Antigravity Python SDK to b", "使用 Google Antigravity Python SDK 构建自定义智能体..."],
+    ["Search and retrieve official documentation acr", "搜索和检索官方开发者文档..."],
+    ["Integration skill and tools for Google Maps Pl", "适用于 Google Maps Platform 的集成技能和工具。"],
+    ["Official plugin for Dart and Flutter that installs", "Dart 和 Flutter 官方插件，提供相关工具安装和开发支持。"],
+    ["This plugin provides a specialized suite of skill", "此插件提供一套专为数据处理打造的专业技能..."],
+    ["Connect to Google Workspace, including Docs, Sheets, Slides, Drive, and Calendar.", "连接到 Google Workspace，包括文档、表格、幻灯片、云端硬盘和日历。"],
+    ["Read, draft, and edit docs.", "读取、起草和编辑文档。"],
+    ["Read, write, and format spreadsheets.", "读取、写入和格式化电子表格。"],
+    ["Read, edit, and export presentations.", "读取、编辑和导出演示文稿。"],
+    ["Search, upload, download, and share files.", "搜索、上传、下载和共享文件。"],
+    ["Check availability, schedule events, and RSVP.", "查看空闲时间、安排活动并回复邀请。"],
 
     // MCP Servers Descriptions
     ["Investigate and fix software issues using AI-powered root cause analysis", "使用 AI 驱动的根本原因分析来调查和修复软件问题。此 MCP 服务器连接到您的 Antimetal 账户..."],
@@ -443,6 +549,31 @@ DOM_TRANSLATOR_INJECTION = r"""
     if (trimmed === "Waiting for user input") {
       return text.replace(trimmed, "等待用户输入");
     }
+    if ((m = trimmed.match(/^Artifacts?\s*(\d+)$/i))) {
+      return text.replace(trimmed, "产物 " + m[1]);
+    }
+    if ((m = trimmed.match(/^No artifacts generated\.?$/i))) {
+      return text.replace(trimmed, "未生成任何产物");
+    }
+    if (/(?:No|否)\s*(?:projects?|项目)?\s*found/i.test(text) || text.indexOf("No projects found") !== -1 || text.indexOf("No project found") !== -1) {
+      return text.replace(/(?:No|否)\s*(?:projects?|项目)?\s*found\.?|No projects found\.?|No project found\.?/gi, "暂无项目");
+    }
+    if ((m = trimmed.match(/^(?:No|否)\s*projects?\s*found\.?$/i))) {
+      return text.replace(trimmed, "暂无项目");
+    }
+    if ((m = trimmed.match(/^No\s+Project$/i))) {
+      return text.replace(trimmed, "无项目");
+    }
+    if (trimmed === "Type") return text.replace(trimmed, "输入");
+    if (trimmed === "and select") return text.replace(trimmed, "并选择");
+    if (trimmed === "to have the agent generate a plan." || trimmed === "to have the agent generate a plan") {
+      return text.replace(trimmed, "即可让智能体生成计划。");
+    }
+    if (trimmed === "Visit") return text.replace(trimmed, "访问");
+    if (trimmed === "Legal Help") return text.replace(trimmed, "法律帮助");
+    if (trimmed === "to ask for content changes for legal reasons." || trimmed === "to ask for content changes for legal reasons") {
+      return text.replace(trimmed, "以出于法律原因请求更改内容。");
+    }
     if ((m = trimmed.match(/^Learn more about (.+)$/))) {
       return text.replace(trimmed, "了解更多关于 " + (dictionary[m[1]] || m[1]) + " 的信息");
     }
@@ -454,6 +585,30 @@ DOM_TRANSLATOR_INJECTION = r"""
       let timeStr = m[1].replace(/days?/g, "天").replace(/hours?/g, "小时").replace(/minutes?/g, "分钟").replace(/,/g, "");
       return text.replace(trimmed, "您已使用部分五小时限额，它将在 " + timeStr + " 后完全重置。");
     }
+    if ((m = trimmed.match(/^Resets? in\s+(.+)$/i))) {
+      let timeStr = m[1]
+        .replace(/(\d+)\s*d(?:ays?)?/gi, "$1天 ")
+        .replace(/(\d+)\s*h(?:ours?)?/gi, "$1小时 ")
+        .replace(/(\d+)\s*m(?:inutes?|ins?)?/gi, "$1分钟 ")
+        .replace(/(\d+)\s*s(?:econds?|ecs?)?/gi, "$1秒 ")
+        .replace(/,\s*/g, " ")
+        .trim();
+      return text.replace(trimmed, "将在 " + timeStr + " 后重置");
+    }
+    if (/^Exploring\b/i.test(trimmed) || /running command/i.test(trimmed)) {
+      let translatedActions = trimmed
+        .replace(/Exploring file/gi, "浏览文件")
+        .replace(/running command/gi, "运行命令")
+        .replace(/editing file/gi, "编辑文件")
+        .replace(/,\s*/g, "、");
+      return text.replace(trimmed, translatedActions);
+    }
+    if ((m = trimmed.match(/^Files? Changed\s*(\d+)$/i))) return text.replace(trimmed, "已修改文件 " + m[1]);
+    if ((m = trimmed.match(/^Uploads?\s*(\d+)$/i))) return text.replace(trimmed, "已上传文件 " + m[1]);
+    if ((m = trimmed.match(/^See all\s*\((.+?)\)$/i))) return text.replace(trimmed, "查看全部 (" + m[1] + ")");
+    if ((m = trimmed.match(/^Background Tasks?\s*(\d+)$/i))) return text.replace(trimmed, "后台任务 " + m[1]);
+    if ((m = trimmed.match(/^Terminals?\s*(\d+)$/i))) return text.replace(trimmed, "终端 " + m[1]);
+    if ((m = trimmed.match(/^No subagents?(?:\s*running)?\.?$/i))) return text.replace(trimmed, "暂无子智能体");
     if ((m = trimmed.match(/^Available AI Credits: ([\d,]+)$/))) {
       return text.replace(trimmed, "可用 AI 积分: " + m[1]);
     }
@@ -466,16 +621,23 @@ DOM_TRANSLATOR_INJECTION = r"""
     if ((m = trimmed.match(/^(\d+) files? changed$/))) {
       return text.replace(trimmed, m[1] + " 个文件已修改");
     }
+    if ((m = trimmed.match(/^See (\d+) more$/i))) return text.replace(trimmed, "查看更多 " + m[1] + " 项");
     if ((m = trimmed.match(/^Last (\d+) days?$/i))) return text.replace(trimmed, "最近 " + m[1] + " 天");
     if ((m = trimmed.match(/^Last (\d+) hours?$/i))) return text.replace(trimmed, "最近 " + m[1] + " 小时");
     if ((m = trimmed.match(/^Last (\d+) months?$/i))) return text.replace(trimmed, "最近 " + m[1] + " 个月");
     if ((m = trimmed.match(/^Version ([\d\.]+(-\w+)?)$/))) {
       return text.replace(trimmed, "版本 v" + m[1]);
     }
-    if ((m = trimmed.match(/^(\d+)s$/))) return text.replace(trimmed, m[1] + "秒前");
-    if ((m = trimmed.match(/^(\d+)m$/))) return text.replace(trimmed, m[1] + "分钟前");
-    if ((m = trimmed.match(/^(\d+)h$/))) return text.replace(trimmed, m[1] + "小时前");
-    if ((m = trimmed.match(/^(\d+)d$/))) return text.replace(trimmed, m[1] + "天前");
+    if ((m = trimmed.match(/^Start using (.+?), our best (.+?) model\.?$/i))) {
+      return text.replace(trimmed, "开始使用 " + m[1] + "，我们最强大的 " + m[2] + " 模型。");
+    }
+    if (text.indexOf("is now available on paid Pro and Ultra plans") !== -1 || text.indexOf("Third-party model access will no longer be available") !== -1) {
+      return "Sonnet 5.5 现已在付费的 Pro 和 Ultra 方案中提供。从 2026 年 11 月 2 日起，您当前的方案将不再支持访问第三方模型。";
+    }
+    if ((m = trimmed.match(/^(\d+)\s*s(?:\s*ago)?$/i))) return text.replace(trimmed, m[1] + "秒前");
+    if ((m = trimmed.match(/^(\d+)\s*m(?:\s*ago)?$/i))) return text.replace(trimmed, m[1] + "分钟前");
+    if ((m = trimmed.match(/^(\d+)\s*h(?:\s*ago)?$/i))) return text.replace(trimmed, m[1] + "小时前");
+    if ((m = trimmed.match(/^(\d+)\s*d(?:\s*ago)?$/i))) return text.replace(trimmed, m[1] + "天前");
 
     // Dynamic Time Formatter
     if (text.indexOf("Worked for") !== -1) {
@@ -550,11 +712,61 @@ DOM_TRANSLATOR_INJECTION = r"""
     return text;
   }
 
+  function checkEmptyContainer(el) {
+    if (!el || el.tagName === 'BODY' || el.tagName === 'HTML') return false;
+    if (el.closest && el.closest('[data-empty-handled="true"]')) return false;
+    if (el.querySelector && el.querySelector('svg, button, input')) return false;
+    let t = el.textContent ? el.textContent.trim() : '';
+    if (!t) return false;
+    let m = t.match(/^(?:No|否)\s*(.*?)\s*found\.?$/i) || t.match(/^(.*?)\s+found\.?$/i) || t === "暂无项目" || t === "暂无对话";
+    if (el.__empty_handled) return false;
+    if (m) {
+      let target = (m[1] || '').trim().toLowerCase();
+      let label = "";
+      let svg = "";
+      if (target === 'projects' || target === 'project' || target === '项目' || target === '' || t === '暂无项目') {
+        label = "暂无项目";
+        svg = '<path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-1.2-1.8A2 2 0 0 0 7.55 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"></path>';
+      } else if (target === 'conversations' || target === 'conversation' || target === '对话' || t === '暂无对话') {
+        label = "暂无对话";
+        svg = '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>';
+      } else if (target === 'results' || target === 'result' || target === '结果') {
+        label = "未找到结果";
+        svg = '<circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>';
+      } else if (target === 'artifacts' || target === 'artifact' || target === '产物') {
+        label = "暂无产物";
+        svg = '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line>';
+      } else if (target === 'files' || target === 'file' || target === '文件') {
+        label = "暂无文件";
+        svg = '<path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline>';
+      } else if (target === 'models' || target === 'model' || target === '模型') {
+        label = "暂无模型";
+        svg = '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>';
+      } else if (target === 'subagents' || target === 'subagent' || target === '子智能体') {
+        label = "暂无子智能体";
+        svg = '<rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle><path d="M12 7v4"></path><line x1="8" y1="16" x2="8" y2="16"></line><line x1="16" y1="16" x2="16" y2="16"></line>';
+      }
+      if (label) {
+        el.setAttribute('data-empty-handled', 'true');
+        el.innerHTML = '<span style="display: inline-flex; align-items: center; gap: 8px; opacity: 0.6; padding: 2px 0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + svg + '</svg><span>' + label + '</span></span>';
+        el.__empty_handled = true;
+        return true;
+      }
+    }
+    return false;
+  }
+
   function processNode(node) {
     if (node.nodeType === Node.TEXT_NODE) {
       // Avoid modifying code snippets or editor content
       if (node.parentElement && node.parentElement.closest && node.parentElement.closest('pre, code, .monaco-editor')) {
         return;
+      }
+      if (node.parentElement) {
+        if (checkEmptyContainer(node.parentElement) ||
+            (node.parentElement.parentElement && checkEmptyContainer(node.parentElement.parentElement))) {
+          return;
+        }
       }
       const translated = translateText(node.textContent);
       if (translated !== node.textContent) {
@@ -562,6 +774,7 @@ DOM_TRANSLATOR_INJECTION = r"""
       }
     } else if (node.nodeType === Node.ELEMENT_NODE) {
       if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE' || node.tagName === 'CODE' || node.tagName === 'PRE') return;
+      if (checkEmptyContainer(node)) return;
       if (node.placeholder) {
         const translated = translateText(node.placeholder);
         if (translated !== node.placeholder) {
@@ -622,7 +835,8 @@ MENU_TRANSLATOR_INJECTION = r"""
     'About Antigravity': '关于 Antigravity', 'Services': '服务', 'Hide Antigravity': '隐藏 Antigravity',
     'Hide Others': '隐藏其他', 'Show All': '显示全部', 'Force Reload': '强制重新加载',
     'Reload': '重新加载', 'Actual Size': '实际大小', 'Zoom In': '放大', 'Zoom Out': '缩小',
-    'Toggle Full Screen': '切换全屏'
+    'Toggle Full Screen': '切换全屏',
+    'Split': '分屏', 'Split Right': '向右分屏', 'Split Down': '向下分屏', 'Replace With New': '替换为新建'
   };
   function translateMenu(menuItem) {
     if (menuItem.label && menuTranslationMap[menuItem.label]) {
@@ -718,7 +932,7 @@ def replace_in_file(file_path, target, replacement):
 def apply_patch():
     print("==================================================================")
     print("                                                                ")
-    print("              Antigravity v2.11.0 桌面端 一键汉化补丁               ")
+    print("              Antigravity v2.21.1 桌面端 一键汉化补丁               ")
     print("Github 开源项目地址：https://github.com/MIMICTE/Antigravity-zh-CN")
     print("                                                                ")
     print("==================================================================")
@@ -730,13 +944,18 @@ def apply_patch():
         os.system("pkill -f Antigravity >/dev/null 2>&1")
 
     # 1. 确保 unpacked app 文件夹存在
+    is_fresh_install = os.path.exists(ASAR_PATH) and not os.path.exists(ASAR_PATH + ".disabled")
+    if is_fresh_install and os.path.exists(UNPACKED_APP_DIR):
+        print("[状态] 检测到软件可能已更新，正在清理旧的解包缓存...")
+        shutil.rmtree(UNPACKED_APP_DIR, ignore_errors=True)
+
     if not os.path.exists(UNPACKED_APP_DIR):
         source_asar = ASAR_PATH
         if not os.path.exists(source_asar) and os.path.exists(ASAR_PATH + ".disabled"):
             source_asar = ASAR_PATH + ".disabled"
             
         if not os.path.exists(source_asar):
-            print(f"[错误] Cannot find app.asar at {ASAR_PATH} or {UNPACKED_APP_DIR}")
+            print(f"[错误] 未找到 app.asar: {ASAR_PATH}")
             return False
 
         print("[执行] 正在提取 app.asar 核心文件 (使用原生 Python 解析器)...")
@@ -804,11 +1023,13 @@ def apply_patch():
 if __name__ == "__main__":
     try:
         apply_patch()
+        input("\n执行完毕，按 Enter 键退出...")
     except KeyboardInterrupt:
         print("\n\n[提示] 用户取消操作。")
+        input("\n按 Enter 键退出...")
     except Exception as e:
         print(f"\n[错误] 执行过程中出现异常: {e}")
         print("\n如果问题持续，请访问 GitHub 提交 Issue:")
         print("https://github.com/MIMICTE/Antigravity-zh-CN/issues")
-        input("\n按任意键退出...")
+        input("\n按 Enter 键退出...")
         raise
