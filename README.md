@@ -37,7 +37,7 @@
 - ✅ 原生级体验，一键执行，自动识别路径并重启
 
 **【Windows 用户使用方法】**
-1. 下载 `Antigravity-zh-CN-v2.22.1-windows-x64.zip` 并解压
+1. 下载 `Antigravity-zh-CN-v2.21.1-windows-x64.zip` 并解压
 2. 双击运行 `Antigravity-Patcher.exe` 开始汉化 (还原请双击 `Restore.exe`)
 
 **【macOS 用户使用方法】**

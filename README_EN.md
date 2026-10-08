@@ -37,7 +37,7 @@ An open-source Chinese localization patch for Google Antigravity Desktop
 - ✅ Native experience, one-click execution with automatic app restart
 
 **【For Windows Users】**
-1. Download `Antigravity-zh-CN-v2.22.1-windows-x64.zip` and extract
+1. Download `Antigravity-zh-CN-v2.21.1-windows-x64.zip` and extract
 2. Double-click `Antigravity-Patcher.exe` to apply the patch (Use `Restore.exe` to revert)
 
 **【For macOS Users】**
