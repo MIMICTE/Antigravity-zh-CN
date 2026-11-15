@@ -5,6 +5,7 @@ import struct
 import subprocess
 import shutil
 import sys
+import time
 
 if sys.platform == "win32":
     APP_DIR = os.path.join(os.getenv('LOCALAPPDATA', ''), 'Programs', 'antigravity')
@@ -389,7 +390,62 @@ DOM_TRANSLATOR_INJECTION = r"""
     "Kick off work on your computer and continue working with your agents from your phone or another device. Turn on Remote Control in app settings.": "在电脑上启动工作，并可以通过手机或其他设备继续与智能体协同工作。请在应用设置中开启“远程控制”。",
     "Kick off work on your computer and continue working with your agents from your phone or another device.": "在电脑上启动工作，并可以通过手机或其他设备继续与智能体协同工作。",
     "Turn on Remote Control in app settings.": "请在应用设置中开启“远程控制”。",
-    "Turn on Remote Control in app settings": "请在应用设置中开启“远程控制”"
+    "Turn on Remote Control in app settings": "请在应用设置中开启“远程控制”",
+
+    // v2.32.x 补充词典 (保留专有名词)
+    "Marketplace": "插件市场", "Browse Marketplace": "浏览插件市场",
+    "Installed": "已安装", "Install": "安装", "Uninstall": "卸载",
+    "Enable": "启用", "Disable": "禁用", "Enabled": "已启用", "Disabled": "已禁用",
+    "Configure": "配置", "Reconnect": "重新连接", "Connected Accounts": "已连接账号",
+    "Sign In": "登录", "Add Account": "添加账号", "Switch Account": "切换账号",
+    "No plugins installed": "暂无已安装的插件",
+    "Search plugins...": "搜索插件...", "Search skills...": "搜索 Skills...", "Search conversations...": "搜索对话...", "Search...": "搜索...",
+    "New Chat": "新建对话", "No results": "无结果", "No results found": "未找到结果",
+    "Copy": "复制", "Copied": "已复制", "Copied!": "已复制！", "Retry": "重试", "Regenerate": "重新生成",
+    "Expand": "展开", "Collapse": "折叠", "Show more": "显示更多", "Show less": "收起", "More": "更多", "Less": "收起",
+    "Close": "关闭", "Done": "完成", "Confirm": "确认", "Continue": "继续", "Skip": "跳过", "Reset": "重置", "Refresh": "刷新", "Reload": "重新加载",
+    "Apply": "应用", "Discard": "丢弃", "Accept": "接受", "Reject": "拒绝", "Approve": "批准", "Deny": "拒绝",
+    "Allow": "允许", "Always Allow": "始终允许", "Allow Once": "仅允许一次", "Ask": "询问",
+    "Update Available": "有可用更新", "Restart to Update": "重启以应用更新", "Checking for Updates...": "正在检查更新...", "Downloading Update...": "正在下载更新...",
+    "Open Folder": "打开文件夹", "Open in IDE": "在 IDE 中打开", "View Diff": "查看 Diff",
+    "Run Command": "运行命令", "Running...": "运行中...", "Thinking...": "思考中...", "Generating...": "生成中...",
+    "Cancelled": "已取消", "Pending": "等待中", "Queued": "排队中", "Error": "错误", "Warning": "警告", "Info": "信息", "Success": "成功",
+    "Details": "详情", "Show Details": "显示详情", "Hide Details": "隐藏详情",
+    "Model Selection": "模型选择", "Auto": "自动", "Default": "默认", "Inherit": "继承", "System Default": "系统默认",
+    "Usage": "用量", "Rate Limit": "速率限制", "Quota": "配额", "Remaining": "剩余",
+    "Preferences": "偏好设置", "Billing": "账单", "Plan": "套餐", "Manage Plan": "管理套餐",
+    "Documentation": "文档", "Docs": "文档", "Release Notes": "更新日志", "What's New": "新特性", "Report Issue": "反馈问题",
+    "Schedule": "计划", "Schedules": "计划", "Recurring": "周期性", "One-shot": "单次", "Timer": "定时器",
+    "Next run": "下次运行", "Last run": "上次运行", "Pause": "暂停", "Resume": "恢复", "Run Now": "立即运行",
+    "No scheduled tasks": "暂无计划任务", "Create Automation": "创建自动化", "Edit Schedule": "编辑计划",
+    "Shared Message Board": "共享消息板", "Message Board": "消息板", "Coordinator": "协调者", "Worker": "工作节点",
+    "Waiting": "等待中", "Stopped": "已停止", "Killed": "已终止",
+
+    // 设置页补充词典 (浏览器 / 常规 / 快捷键)
+    "Configure built-in browser, link opening, and browser subagent preferences.": "配置内置浏览器、链接打开方式及浏览器子智能体偏好设置。",
+    "Built-in Browser": "内置浏览器", "External Browser": "外部浏览器",
+    "Open Links In": "链接打开方式", "Choose where links open by default when clicked.": "选择点击链接时默认在何处打开。",
+    "Download Location": "下载位置", "Folder where files downloaded in the built-in browser are saved.": "保存内置浏览器所下载文件的文件夹。",
+    "Change...": "更改...", "Change": "更改",
+    "Browsing History": "浏览历史", "Clear visited URLs and autocomplete suggestions from the built-in browser.": "清除内置浏览器中访问过的 URL 和自动补全建议。",
+    "Browser Subagent": "浏览器子智能体",
+    "Configure allowed and denied URLs for the browser subagent. It runs in the built-in browser, so no separate browser install is needed.": "配置浏览器子智能体允许和拒绝访问的 URL。它运行在内置浏览器中，无需单独安装浏览器。",
+    "Interface Layout": "界面布局",
+    "Knowledge Work": "知识工作", "Simplified interface for research, writing, and everyday tasks.": "适用于研究、写作与日常任务的简化界面。",
+    "Software Engineering": "软件工程", "Full interface for coding, developer tools, and managing agents.": "适用于编码、开发者工具与管理智能体的完整界面。",
+    "Permissions": "权限",
+    "Configure what the agent can do in local and remote conversations.": "配置智能体在本地和远程对话中可执行的操作。",
+    "Configure what the agent can do in local and remote conversations. ": "配置智能体在本地和远程对话中可执行的操作。",
+    "This Computer": "本机",
+    "Default and Auto need the terminal sandbox, which isn't available on this host.": "默认（Default）和自动（Auto）模式需要终端沙盒，当前主机暂不支持。",
+    "Remote": "远程", "Controls permissions for remote conversations.": "控制远程对话的权限。",
+    "Voice mode": "语音模式", "Voice": "语音",
+    "The voice used in Voice mode. Powered by Gemini Live.": "语音模式下使用的音色。由 Gemini Live 提供支持。",
+    "Microphone": "麦克风",
+    "Mute Voice Mic": "静音语音麦克风", "Mute Voice Speaker": "静音语音扬声器",
+    "Pin / Unpin Conversation": "置顶 / 取消置顶对话", "Archive This Conversation": "归档当前对话",
+    "Toggle Side Panel": "切换右侧面板", "Toggle Maximize Side Panel": "切换最大化右侧面板",
+    "Toggle Overview Panel": "切换概览面板", "Toggle Terminal": "切换终端"
   };
 
   const coreWords = {
@@ -638,6 +694,14 @@ DOM_TRANSLATOR_INJECTION = r"""
     if ((m = trimmed.match(/^(\d+)\s*m(?:\s*ago)?$/i))) return text.replace(trimmed, m[1] + "分钟前");
     if ((m = trimmed.match(/^(\d+)\s*h(?:\s*ago)?$/i))) return text.replace(trimmed, m[1] + "小时前");
     if ((m = trimmed.match(/^(\d+)\s*d(?:\s*ago)?$/i))) return text.replace(trimmed, m[1] + "天前");
+    if ((m = trimmed.match(/^(\d+)\s*seconds?\s*ago$/i))) return text.replace(trimmed, m[1] + "秒前");
+    if ((m = trimmed.match(/^(\d+)\s*minutes?\s*ago$/i))) return text.replace(trimmed, m[1] + "分钟前");
+    if ((m = trimmed.match(/^(\d+)\s*hours?\s*ago$/i))) return text.replace(trimmed, m[1] + "小时前");
+    if ((m = trimmed.match(/^(\d+)\s*days?\s*ago$/i))) return text.replace(trimmed, m[1] + "天前");
+    if ((m = trimmed.match(/^(\d+)\s*items?$/i))) return text.replace(trimmed, m[1] + " 项");
+    if ((m = trimmed.match(/^(\d+)\s*selected$/i))) return text.replace(trimmed, "已选择 " + m[1] + " 项");
+    if ((m = trimmed.match(/^(\d+)\s*results?$/i))) return text.replace(trimmed, m[1] + " 条结果");
+    if ((m = trimmed.match(/^Showing (\d+) of (\d+)$/i))) return text.replace(trimmed, "显示第 " + m[1] + " / " + m[2] + " 项");
 
     // Dynamic Time Formatter
     if (text.indexOf("Worked for") !== -1) {
@@ -758,8 +822,8 @@ DOM_TRANSLATOR_INJECTION = r"""
 
   function processNode(node) {
     if (node.nodeType === Node.TEXT_NODE) {
-      // Avoid modifying code snippets or editor content
-      if (node.parentElement && node.parentElement.closest && node.parentElement.closest('pre, code, .monaco-editor')) {
+      // Avoid modifying code snippets, editor content, terminal, or editable inputs
+      if (node.parentElement && node.parentElement.closest && node.parentElement.closest('pre, code, kbd, samp, var, textarea, .monaco-editor, .cm-editor, .xterm, [contenteditable="true"]')) {
         return;
       }
       if (node.parentElement) {
@@ -773,7 +837,8 @@ DOM_TRANSLATOR_INJECTION = r"""
         node.textContent = translated;
       }
     } else if (node.nodeType === Node.ELEMENT_NODE) {
-      if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE' || node.tagName === 'CODE' || node.tagName === 'PRE') return;
+      if (['SCRIPT', 'STYLE', 'CODE', 'PRE', 'TEXTAREA', 'KBD', 'SAMP', 'VAR'].includes(node.tagName)) return;
+      if (node.isContentEditable || (node.closest && node.closest('.monaco-editor, .cm-editor, .xterm'))) return;
       if (checkEmptyContainer(node)) return;
       if (node.placeholder) {
         const translated = translateText(node.placeholder);
@@ -799,6 +864,24 @@ DOM_TRANSLATOR_INJECTION = r"""
     }
   }
 
+  function translateAttributes(el) {
+    if (!el || el.nodeType !== Node.ELEMENT_NODE) return;
+    if (el.closest && el.closest('pre, code, .monaco-editor, .cm-editor, .xterm')) return;
+    if (el.placeholder) {
+      const t = translateText(el.placeholder);
+      if (t !== el.placeholder) el.placeholder = t;
+    }
+    if (el.title) {
+      const t = translateText(el.title);
+      if (t !== el.title) el.title = t;
+    }
+    if (el.getAttribute && el.getAttribute('aria-label')) {
+      const a = el.getAttribute('aria-label');
+      const t = translateText(a);
+      if (t !== a) el.setAttribute('aria-label', t);
+    }
+  }
+
   const observer = new MutationObserver((mutations) => {
     mutations.forEach(mutation => {
       if (mutation.type === 'childList') {
@@ -807,6 +890,8 @@ DOM_TRANSLATOR_INJECTION = r"""
         });
       } else if (mutation.type === 'characterData') {
         processNode(mutation.target);
+      } else if (mutation.type === 'attributes') {
+        translateAttributes(mutation.target);
       }
     });
   });
@@ -816,7 +901,9 @@ DOM_TRANSLATOR_INJECTION = r"""
     observer.observe(document.body, {
       childList: true,
       subtree: true,
-      characterData: true
+      characterData: true,
+      attributes: true,
+      attributeFilter: ['title', 'placeholder', 'aria-label']
     });
   });
 })();
@@ -836,11 +923,31 @@ MENU_TRANSLATOR_INJECTION = r"""
     'Hide Others': '隐藏其他', 'Show All': '显示全部', 'Force Reload': '强制重新加载',
     'Reload': '重新加载', 'Actual Size': '实际大小', 'Zoom In': '放大', 'Zoom Out': '缩小',
     'Toggle Full Screen': '切换全屏',
-    'Split': '分屏', 'Split Right': '向右分屏', 'Split Down': '向下分屏', 'Replace With New': '替换为新建'
+    'Split': '分屏', 'Split Right': '向右分屏', 'Split Down': '向下分屏', 'Replace With New': '替换为新建',
+    'Docs': '文档', 'Connect to WSL': '连接到 WSL', 'Reopen Locally': '在本地重新打开',
+    'Rename': '重命名', 'Pin': '置顶', 'Unpin': '取消置顶', 'Archive': '归档', 'Unarchive': '取消归档',
+    'Delete': '删除', 'Duplicate': '制作副本', 'Duplicate Conversation': '复制对话',
+    'Delete Conversation': '删除对话', 'Archive Conversation': '归档对话',
+    'Copy ID': '复制 ID', 'Copy Link': '复制链接', 'Copy Conversation ID': '复制对话 ID', 'Copy Conversation Link': '复制对话链接',
+    'Copy Path': '复制路径', 'Copy Relative Path': '复制相对路径', 'Reveal in File Explorer': '在文件资源管理器中显示',
+    'Mark Read': '标记为已读', 'Mark Unread': '标记为未读',
+    'Close Others': '关闭其他', 'Close All': '全部关闭', 'Close to the Right': '关闭右侧', 'Close Saved': '关闭已保存',
+    'Open in New Window': '在新窗口中打开', 'Open in IDE': '在 IDE 中打开',
+    'Connection info…': '连接信息…', 'Connection info...': '连接信息...',
+    'Inspect': '检查', 'Inspect Element': '检查元素', 'Back': '返回', 'Forward': '前进'
+  };
+  const roleTranslationMap = {
+    'undo': '撤销', 'redo': '重做', 'cut': '剪切', 'copy': '复制', 'paste': '粘贴',
+    'selectall': '全选', 'delete': '删除'
   };
   function translateMenu(menuItem) {
     if (menuItem.label && menuTranslationMap[menuItem.label]) {
       menuItem.label = menuTranslationMap[menuItem.label];
+    } else if (!menuItem.label && menuItem.role) {
+      const mapped = roleTranslationMap[String(menuItem.role).toLowerCase()];
+      if (mapped) {
+        menuItem.label = mapped;
+      }
     }
     if (menuItem.submenu && menuItem.submenu.items) {
       menuItem.submenu.items.forEach(translateMenu);
@@ -940,8 +1047,10 @@ def apply_patch():
     print("[执行] 正在为您关闭 Antigravity 程序...")
     if sys.platform == "win32":
         os.system("taskkill /F /IM Antigravity.exe >nul 2>&1")
+        time.sleep(1.5)
     elif sys.platform == "darwin":
         os.system("pkill -f Antigravity >/dev/null 2>&1")
+        time.sleep(1.0)
 
     # 1. 确保 unpacked app 文件夹存在
     is_fresh_install = os.path.exists(ASAR_PATH) and not os.path.exists(ASAR_PATH + ".disabled")
@@ -972,12 +1081,33 @@ def apply_patch():
     preload_path = os.path.join(UNPACKED_APP_DIR, "dist", "preload.js")
     menu_path = os.path.join(UNPACKED_APP_DIR, "dist", "menu.js")
     tray_path = os.path.join(UNPACKED_APP_DIR, "dist", "tray.js")
+    main_path = os.path.join(UNPACKED_APP_DIR, "dist", "main.js")
+    updater_path = os.path.join(UNPACKED_APP_DIR, "dist", "updater.js")
 
     append_once(preload_path, DOM_TRANSLATOR_INJECTION, "Antigravity Chinese Localization Engine", "Web UI Injection")
     append_once(menu_path, MENU_TRANSLATOR_INJECTION, "Antigravity Chinese Localization Engine - Menu", "Menu Translator Injection")
 
+    # 兼容旧版 tray.js 与新版 main.js / tray.js 托盘菜单
     replace_in_file(tray_path, "'Show Antigravity'", "'显示 Antigravity'")
     replace_in_file(tray_path, "'Quit'", "'退出'")
+    replace_in_file(
+        tray_path,
+        "(count > 0 ? `${count}` : 'No') +\n                    ' agent' +\n                    (count === 1 ? '' : 's') +\n                    ' running'",
+        "count > 0 ? `${count} 个智能体运行中` : '暂无运行中的智能体'"
+    )
+    replace_in_file(main_path, "label: 'New Window',", "label: '新建窗口',")
+    replace_in_file(main_path, "label: 'No agents running',", "label: '暂无运行中的智能体',")
+    replace_in_file(main_path, "label: `Open ${electron_1.app.getName()}`,", "label: `打开 ${electron_1.app.getName()}`,")
+    replace_in_file(main_path, "label: 'Quit',", "label: '退出',")
+
+    # 汉化 updater.js 与 webviewPopupSecurity.js 原生弹窗
+    replace_in_file(updater_path, "title: 'Check for Updates',", "title: '检查更新',")
+    replace_in_file(updater_path, "message: 'No updates available',", "message: '暂无可用更新',")
+    replace_in_file(updater_path, "buttons: ['OK'],", "buttons: ['确定'],")
+    popup_sec_path = os.path.join(UNPACKED_APP_DIR, "dist", "webviewPopupSecurity.js")
+    replace_in_file(popup_sec_path, "label: 'Connection info…',", "label: '连接信息…',")
+    replace_in_file(popup_sec_path, "title: 'Connection info',", "title: '连接信息',")
+    replace_in_file(popup_sec_path, "buttons: ['OK'],", "buttons: ['确定'],")
 
     # 3. 汉化 loadingOverlay (Splash Screen)
     loading_path = os.path.join(UNPACKED_APP_DIR, "dist", "loadingOverlay.js")
@@ -990,11 +1120,19 @@ def apply_patch():
                 f.write(patched_loading)
             print(f"[成功] 已成功汉化启动加载界面 ({os.path.basename(loading_path)})")
 
-    # 4. 禁用原生 app.asar
+    # 4. 禁用原生 app.asar（带重试，避免进程尚未完全释放句柄引发 WinError 32）
     if os.path.exists(ASAR_PATH):
         print("[执行] 正在禁用官方 app.asar，以强制读取汉化代码...")
-        os.rename(ASAR_PATH, ASAR_PATH + ".disabled")
-        print("[成功] app.asar -> app.asar.disabled")
+        for attempt in range(5):
+            try:
+                os.rename(ASAR_PATH, ASAR_PATH + ".disabled")
+                print("[成功] app.asar -> app.asar.disabled")
+                break
+            except PermissionError:
+                if attempt < 4:
+                    time.sleep(1.0)
+                else:
+                    raise
 
     print("                                                                ")
     print("==================================================================")
